@@ -2,8 +2,11 @@
     <a href="/" class="logo d-flex align-items-center mb-2 mb-md-0 text-white text-decoration-none">요기어때</a>
 
     <div class="text-end">
-        <a href="/" class="btn btn-link btn-sm text-white me-2">Login</a>
-        <a href="/" class="btn btn-link btn-sm text-white me-2">Logout</a>
-        <a href="/" class="btn btn-sm signup">Sign-up</a>
+        {% if status == 1 %}
+            <a href="#" class="btn btn-link btn-sm text-white me-2" onclick="logout()">Logout</a>
+        {% else %}
+            <a href="#" class="btn btn-link btn-sm text-white me-2" onclick="login()">Login</a>
+            <a href="#" class="btn btn-sm signup" onclick="signup()">Sign-up</a>
+        {% endif %}
     </div>
 </header>

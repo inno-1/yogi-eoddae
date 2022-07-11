@@ -4,7 +4,7 @@
     width: 100%;
     height: 200px;
 
-    background-color: rgb(230, 25, 78);
+    background-color: var(--point-color);
     background-position: center;
     background-size: cover;
 
@@ -44,7 +44,7 @@ h1 {
     text-align: center;
 }
 .mybtn{
-    background-color: rgb(230, 25, 78);
+    background-color: var(--point-color);
     color: white;
     display :inline-block;
 }
