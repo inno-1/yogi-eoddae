@@ -115,24 +115,14 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
 
-# 최신순
-@app.route('/listing/', methods=['GET'])
-def listing():
-    posts = list(db.posts.find({}, {'_id': False}).sort('date', pymongo.DESCENDING))
-    return jsonify({'all_posts': posts})
-
-
-# 조회수 순
-@app.route('/listing/:type', methods=['GET'])
-def listByView():
-    posts = list(db.posts.find({}, {'_id': False}).sort('view', pymongo.DESCENDING))
-    return jsonify({'all_posts': posts})
-
-
-# 추천수 순
-@app.route('/listing/:type', methods=['GET'])
-def listByRecommend():
-    posts = list(db.posts.find({}, {'_id': False}).sort('recommend', pymongo.DESCENDING))
+@app.route('/listing/<type>', methods=['GET'])
+def listing(type):
+    if type == 'date':
+        posts = list(db.posts.find({}, {'_id': False}).sort('date', pymongo.DESCENDING))    # 최신순
+    elif type == 'view':
+        posts = list(db.posts.find({}, {'_id': False}).sort('view', pymongo.DESCENDING))    # 조회수 순
+    else:
+        posts = list(db.posts.find({}, {'_id': False}).sort('recommend', pymongo.DESCENDING))   # 추천수 순
     return jsonify({'all_posts': posts})
 
 
