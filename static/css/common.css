@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'yg-jalnan';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+  --point-color: rgb(230, 25, 78);
+}
+
+.btn-point {
+    color: #fff !important;
+    background-color: var(--point-color) !important;
+    border-color: var(--point-color) !important;
+}
