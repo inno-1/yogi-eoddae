@@ -88,6 +88,11 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
+@app.route('/posting')
+def posting():
+    return render_template('posting.html')
+
+
 
 
 if __name__ == '__main__':
