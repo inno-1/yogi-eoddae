@@ -1,0 +1,7 @@
+.card-img-top {
+    height: 255px;
+    background-image: url("../img/logo.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
