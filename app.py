@@ -100,6 +100,19 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
+@app.route('/api/check', methods=['GET'])
+def api_valid():
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        return jsonify({'result': 'success'})
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)
