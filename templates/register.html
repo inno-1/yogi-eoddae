@@ -17,13 +17,27 @@
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://webfontworld.github.io/goodchoice/Jalnan.css" rel="stylesheet">
 
         <style>
             * {
-                font-family: 'Gowun Batang', serif;
-                color: black;
+                font-family: 'Jalnan';
             }
+            .top-bar{
+                width: 100%;
+                height: 200px;
 
+                background-color: rgb(230, 25, 78);
+                background-position: center;
+                background-size: cover;
+
+                color: white;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
             body {
                 background-position: center;
                 background-size: cover;
@@ -42,11 +56,21 @@
             .login > h3 {
                 text-align: center;
             }
+            .input-group-text{
+                width: 100px;
+            }
             .buttons{
                 margin: 0 auto;
                 text-align: center;
             }
+            .buttons > button{
+
+                background-color: rgb(230, 25, 78);
+                color: white;
+            }
             .mybtn{
+                background-color: rgb(230, 25, 78);
+                color: white;
                 display :inline-block;
             }
 
@@ -130,6 +154,9 @@
 
     </head>
     <body>
+        <div class="top-bar">
+            <h1>요기어때</h1>
+        </div>
         <div class="login">
             <h3>회원가입</h3>
             <div class="login-info">

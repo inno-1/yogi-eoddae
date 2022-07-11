@@ -1,6 +1,6 @@
 /* 헤더 */
 header {
-    background-color: rgb(230, 25, 78);
+    background-color: var(--point-color);
 }
 
 header > .logo {
@@ -9,10 +9,10 @@ header > .logo {
 }
 
 header a.signup {
-    color: rgb(230, 25, 78);
+    color: var(--point-color);
     background-color: #fff;
 }
 
 header a.signup:hover {
-    color: rgb(230, 25, 78);
+    color: var(--point-color);
 }

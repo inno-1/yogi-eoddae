@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href='{{ url_for("static", filename="css/reset.css") }}' rel="stylesheet">
+    <link href='{{ url_for("static", filename="css/common.css") }}' rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -26,7 +27,7 @@
 
 {% include 'header.html' %}
 
-<!--<main>
+<main>
     <div class="album py-5">
         <div class="container">
 
@@ -56,7 +57,7 @@
                     </div>
                 </div>
 
-                <a href="/" class="btn btn-primary btn-sm">글쓰기</a>
+                <a href="/" class="btn btn-point btn-sm">글쓰기</a>
             </div>
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -76,44 +77,7 @@
             </div>
         </div>
     </div>
-</main>-->
-
-<div class="container">
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">제목</span>
-        <input type="text" class="form-control" placeholder="제목을 입력해주세요" aria-label="제목"
-               aria-describedby="basic-addon1">
-    </div>
-
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username"
-               aria-describedby="basic-addon2">
-        <span class="input-group-text" id="basic-addon2">@example.com</span>
-    </div>
-
-    <label for="basic-url" class="form-label">Your vanity URL</label>
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
-        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-    </div>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text">$</span>
-        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-        <span class="input-group-text">.00</span>
-    </div>
-
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Username" aria-label="Username">
-        <span class="input-group-text">@</span>
-        <input type="text" class="form-control" placeholder="Server" aria-label="Server">
-    </div>
-
-    <div class="input-group">
-        <span class="input-group-text">With textarea</span>
-        <textarea class="form-control" aria-label="With textarea"></textarea>
-    </div>
-</div>
+</main>
 
 </body>
 
