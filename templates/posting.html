@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poor+Story&display=swap" rel="stylesheet">
+
+    <title>포스팅 쓰기</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <style>
+
+
+        .writewrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .jumbotron {
+            background-color: rgb(230, 25, 78, 0.25);
+        }
+
+        .jumbotron-fluid {
+            padding-right: 110px;
+            padding-left: 110px;
+        }
+
+        .container > h3 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        textarea.form-control {
+            height: 150px;
+        }
+
+        input[type="text"] {
+
+            all: unset;
+            padding: 10px;
+            font-size: 18px;
+            border: 0;
+            width: 96.8%;
+            border-bottom: 2px solid gray;
+        }
+
+        .writebtn {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .writebtn > button {
+
+            font-size: 17px;
+            border: 0;
+            width: 100px;
+            height: 30px;
+            font-weight: bold;
+            transition-duration: 0.5s;
+            cursor: pointer;
+        }
+
+        .writebtn > button:hover {
+
+            background-color: white;
+            transition-duration: 0.5s;
+            color: gray;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+<div class="writewrap">
+    <div style="height:150px;"></div>
+    <div class="wrap" style=" max-width: 900px; margin: auto;">
+        <div class="jumbotron jumbotron-fluid">
+
+            <div class="posting-box">
+                <div class="container">
+                    <h3>작성자:</h3>
+                </div>
+                <div class="custom-file" style="margin-bottom: 5px;">
+                    <input type="file" class="custom-file-input" id="file">
+                    <label class="custom-file-label" for="file">선택된 파일 없음</label>
+                </div>
+                <div class="form-group">
+                        <textarea class="form-control" id="content"
+                                  placeholder="내용"></textarea>
+                </div>
+
+                <div class="writebtn">
+                    <button>
+                        저장하기
+                    </button>
+                    <button>
+                        돌아가기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
