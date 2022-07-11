@@ -42,6 +42,27 @@
             padding: 0;
         }
 
+        .review-con .input-group textarea {
+            height: 180px;
+            padding-right: 89px;
+        }
+
+        #reviewBtn {
+            position: absolute;
+            right: 1px;
+            top: 1px;
+            height: calc(100% - 2px);
+            border: none;
+            padding: 0 30px;
+            transition: .2s;
+        }
+
+        #reviewBtn:hover {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
     </style>
 
 </head>
@@ -94,6 +115,12 @@
     </div>
 
     <div class="review-con">
+        <div class="input-group mb-4">
+            <label for="reviewTxtArea" class="input-group-text">리뷰</label>
+            <textarea id="reviewTxtArea" class="form-control" aria-label="리뷰"></textarea>
+            <button type="button" id="reviewBtn">등록</button>
+        </div>
+
         <ul class="review-list">
             <li>
                 <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
@@ -111,13 +138,6 @@
             </li>
         </ul>
     </div>
-
-
-
-
-
 </div>
-
 </body>
-
 </html>

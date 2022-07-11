@@ -14,3 +14,9 @@
     background-color: var(--point-color) !important;
     border-color: var(--point-color) !important;
 }
+
+.btn-point:hover {
+    color: #000 !important;
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+}
