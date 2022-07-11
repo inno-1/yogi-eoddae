@@ -83,6 +83,9 @@
             transition-duration: 0.5s;
             color: gray;
         }
+
+        .custom-file {
+        }
     </style>
 
 </head>
@@ -96,16 +99,19 @@
         <div class="jumbotron jumbotron-fluid">
 
             <div class="posting-box">
-                <div class="container">
-                    <h3>작성자:</h3>
-                </div>
-                <div class="custom-file" style="margin-bottom: 5px;">
+                <div class="custom-file" style="margin-bottom: 15px;">
                     <input type="file" class="custom-file-input" id="file">
-                    <label class="custom-file-label" for="file">선택된 파일 없음</label>
+                    <label class="custom-file-label" for="file">이미지 등록</label>
                 </div>
                 <div class="form-group">
-                        <textarea class="form-control" id="content"
-                                  placeholder="내용"></textarea>
+                    <input type="password" class="form-control" id="placename" placeholder="이름 입력">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="address" placeholder="주소 입력">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="content"
+                              placeholder="내용 입력"></textarea>
                 </div>
 
                 <div class="writebtn">
