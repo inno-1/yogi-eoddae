@@ -52,6 +52,19 @@ def api_register():
 
     return jsonify({'result': 'success'})
 
+# [안웅기] 아이디 중복확인
+@app.route('/api/register/check-dup', methods=['POST'])
+def check_dup():
+    # ID 중복확인
+    id_receive = request.form['id_give']
+    result = db.users.find_one({'user_id': id_receive})
+    if result:
+        return jsonify({'result': 'exist'})
+    else:
+        return jsonify({'result': 'success'})
+
+
+
 # [안웅기] 로그인 API
 @app.route('/api/login', methods=['POST'])
 def api_login():
@@ -74,6 +87,7 @@ def api_login():
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+
 
 
 if __name__ == '__main__':
