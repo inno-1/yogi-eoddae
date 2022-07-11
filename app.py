@@ -6,12 +6,11 @@ import datetime
 import hashlib
 app = Flask(__name__)
 
-
+# [안웅기] 개인적인 맥 로컬 환경에 DB 접속 오류로 인한 추가
 ca = certifi.where()
 client = MongoClient('mongodb+srv://team5:sparta@cluster0.odclv.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client['yogi-eoddae']
 
-print(db)
 @app.route('/')
 def home():
     return render_template('index.html')
