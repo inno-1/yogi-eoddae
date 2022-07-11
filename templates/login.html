@@ -58,10 +58,23 @@
                 alert("{{ msg }}")
             {% endif %}
             function login() {
+                let user_id = $('#userid').val();
+                let user_pw = $('#userpw').val();
+
+                if(user_id == ''){
+                    alert('아이디를 입력하세요.');
+                    return;
+                }
+
+                if(user_pw == ''){
+                    alert('패스워드를 입력하세요.');
+                    return
+                }
+
                 $.ajax({
                     type: "POST",
                     url: "/api/login",
-                    data: {id_give: $('#userid').val(), pw_give: $('#userpw').val()},
+                    data: {id_give: user_id, pw_give: user_pw},
                     success: function (response) {
                         if (response['result'] == 'success') {
                             // 로그인이 정상적으로 되면, 토큰을 받아옵니다.

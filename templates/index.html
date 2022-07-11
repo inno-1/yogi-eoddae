@@ -24,19 +24,9 @@
 
 <body>
 
-<header class="d-flex flex-wrap align-items-center justify-content-between px-3 py-3 border-bottom">
-    <a href="/" class="logo d-flex align-items-center mb-2 mb-md-0 text-dark text-decoration-none">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="요기어때">
-    </a>
+{% include 'header.html' %}
 
-    <div class="text-end">
-        <a href="/" class="btn btn-outline-primary btn-sm me-2">Login</a>
-        <a href="/" class="btn btn-outline-primary btn-sm me-2">Logout</a>
-        <a href="/" class="btn btn-primary btn-sm">Sign-up</a>
-    </div>
-</header>
-
-<main>
+<!--<main>
     <div class="album py-5">
         <div class="container">
 
@@ -86,7 +76,44 @@
             </div>
         </div>
     </div>
-</main>
+</main>-->
+
+<div class="container">
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">제목</span>
+        <input type="text" class="form-control" placeholder="제목을 입력해주세요" aria-label="제목"
+               aria-describedby="basic-addon1">
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username"
+               aria-describedby="basic-addon2">
+        <span class="input-group-text" id="basic-addon2">@example.com</span>
+    </div>
+
+    <label for="basic-url" class="form-label">Your vanity URL</label>
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
+        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">$</span>
+        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+        <span class="input-group-text">.00</span>
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Username" aria-label="Username">
+        <span class="input-group-text">@</span>
+        <input type="text" class="form-control" placeholder="Server" aria-label="Server">
+    </div>
+
+    <div class="input-group">
+        <span class="input-group-text">With textarea</span>
+        <textarea class="form-control" aria-label="With textarea"></textarea>
+    </div>
+</div>
 
 </body>
 

@@ -1,2 +1,18 @@
-/* 로고 */
-header > .logo { width: 50px; }
+/* 헤더 */
+header {
+    background-color: rgb(230, 25, 78);
+}
+
+header > .logo {
+    font-family: 'yg-jalnan';
+    font-size: 20px;
+}
+
+header a.signup {
+    color: rgb(230, 25, 78);
+    background-color: #fff;
+}
+
+header a.signup:hover {
+    color: rgb(230, 25, 78);
+}
