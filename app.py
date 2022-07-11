@@ -1,3 +1,4 @@
+import pymongo
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
 import certifi
@@ -112,6 +113,20 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
+
+
+@app.route('/listing', methods=['GET'])
+def listing():
+    posts = list(db.posts.find({}, {'_id': False}).sort('date', pymongo.DESCENDING))
+    return jsonify({'all_posts': posts})
+
+# def listByView():
+#     posts = list(db.posts.find({}, {'view': False}))
+#     return jsonify({'all_posts': posts})
+#
+# def listByRecommend():
+#     posts = list(db.posts.find({}, {'recommend': False}))
+#     return jsonify({'all_posts': posts})
 
 
 if __name__ == '__main__':
