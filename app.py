@@ -318,7 +318,7 @@ def save_posting():
         'location': location_receive,
         'file': 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename,
         'view': 0,
-        'recommand': 0
+        'recommend': 0
 
     }
     db.posts.insert_one(doc)
