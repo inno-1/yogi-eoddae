@@ -94,7 +94,7 @@
 
     <!--첨부한 이미지 나오는 영역-->
     <div class="mb-5 text-center">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="게시글 썸네일">
+        <img src="{{post.file}}" onerror='this.onerror=null; this.src="../static/img/logo.png";'>
     </div>
 
     <!--텍스트 내용 나오는 영역-->
