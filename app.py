@@ -39,44 +39,24 @@ def token_request():
     except jwt.ExpiredSignatureError:
         cur_status = 2
     except jwt.exceptions.DecodeError:
-        curstatus = 3
+        cur_status = 3
 
     return cur_status, cur_id
 
 # [안웅기] HTML 페이지 렌더링
 @app.route('/')
 def home():
-
-    postList = list(db.posts.find({}, {"_id":False}))
-
     cur_status, cur_id = token_request()
 
     result = {'status': cur_status}
-    posts = load_posts()
+    post_list = load_posts()
 
-    if len(posts) > 0:
-        result['posts'] = posts
-        result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
+    if len(post_list) > 0:
+        result['posts'] = post_list
 
-    headers = {
-        "X-NCP-APIGW-API-KEY-ID": MAP_CLIENT_ID,
-        "X-NCP-APIGW-API-KEY": MAP_CLIENT_SECRET_KEY
-    }
+    result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
 
-    for post in posts:
-        r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={post['location']}",
-                         headers=headers)
-        response = r.json()
-
-        if response["status"] == "OK":
-            if len(response["addresses"]) > 0:
-                x = float(response["addresses"][0]["x"])
-                y = float(response["addresses"][0]["y"])
-                post['point'] = {'x': x, 'y': y}
-            else:
-                print("좌표를 찾지 못했습니다")
-
-    return render_template('index.html', result=result, postList=postList)
+    return render_template('index.html', result=result)
 
 @app.route('/login')
 def login():
@@ -90,14 +70,14 @@ def register():
 
 @app.route('/posting')
 def posting():
-    return render_template('posting.html')
+    cur_status, cur_user_id = token_request()
+    result = {'status': cur_status}
+    return render_template('posting.html', result=result)
 
 @app.route('/detail/<post_id>')
 def detail(post_id):
     token_receive = request.cookies.get('mytoken')
     cur_status, cur_user_id = token_request()
-
-    postList = list(db.posts.find({}, {"_id": False}))
 
     result = {'status' : cur_status, 'user_id' : cur_user_id}
     review_list = list(db.reviews.find({'post_id' : int(post_id)}))
@@ -105,7 +85,11 @@ def detail(post_id):
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
         review['_id'] = str(review['_id'])
 
-    return render_template('detail.html', reviews=review_list, result=result, postList=postList)
+    post_list = load_posts()
+    if len(post_list) > 0:
+        result['posts'] = post_list
+
+    return render_template('detail.html', reviews=review_list, result=result)
 
 # [안웅기] 로그인을 위한 API
 
@@ -306,8 +290,23 @@ def save_posting():
         'file': 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename,
         'view': 0,
         'recommand': 0
-
     }
+
+    # [양명규] 입력한 주소를 x,y 좌표로 변환
+    headers = {
+        "X-NCP-APIGW-API-KEY-ID": MAP_CLIENT_ID,
+        "X-NCP-APIGW-API-KEY": MAP_CLIENT_SECRET_KEY
+    }
+
+    r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={location_receive}", headers=headers)
+    response = r.json()
+
+    if response["status"] == "OK":
+        if len(response["addresses"]) > 0:
+            x = float(response["addresses"][0]["x"])
+            y = float(response["addresses"][0]["y"])
+            doc['point'] = {'x': x, 'y': y}
+
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
 
