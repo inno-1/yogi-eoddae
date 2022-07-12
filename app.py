@@ -48,7 +48,7 @@ def posting():
 
 @app.route('/detail/<post_id>')
 def detail(post_id):
-    review_list = list(db.reviews.find({'post_id' : post_id}, {'_id': False}))
+    review_list = list(db.reviews.find({'post_id' : int(post_id)}, {'_id' : False}))
     for review in review_list:
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
     return render_template('detail.html', reviews=review_list)
