@@ -207,7 +207,7 @@ def save_posting ():
 
     extension = file.filename.split('.')[-1]
 
-    today = datetime.datetime.now()
+    today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
 
     filename = f'file-{mytime}'
@@ -215,8 +215,13 @@ def save_posting ():
     save_to = f'static/img/{filename}.{extension}'
     file.save(save_to)
 
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
     doc = {
         'title': title_receive,
+        'date': datetime.now(),
+        'user_id': payload['id'],
         'content': content_receive,
         'location': location_receive,
         'file': f'{filename}.{extension}'
