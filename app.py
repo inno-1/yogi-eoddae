@@ -116,15 +116,32 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
 
-@app.route('/listing/<type>', methods=['GET'])
-def listing(type):
+# 타입을 파라미터로 받음 -> date, view, recommend
+@app.route('/post/<type>', methods=['GET'])
+def all_listing(type):
     if type == 'date':
-        posts = list(db.posts.find({}, {'_id': False}).sort('date', pymongo.DESCENDING))    # 최신순
+        post = list(db.posts.find({}, {'_id': False}).sort('date', pymongo.DESCENDING))    # 최신순
     elif type == 'view':
-        posts = list(db.posts.find({}, {'_id': False}).sort('view', pymongo.DESCENDING))    # 조회수 순
+        post = list(db.posts.find({}, {'_id': False}).sort('view', pymongo.DESCENDING))    # 조회수 순
+    elif type == 'recommend':
+        post = list(db.posts.find({}, {'_id': False}).sort('recommend', pymongo.DESCENDING))   # 추천수 순
     else:
-        posts = list(db.posts.find({}, {'_id': False}).sort('recommend', pymongo.DESCENDING))   # 추천수 순
-    return jsonify({'all_posts': posts})
+        post = list(db.posts.find({}, {'_id': False}))  # 정렬 없음
+    return jsonify({'all_posts': post})
+
+
+# 로그인 된 유저 id를 받음
+@app.route('/post/<type>/<int:user_id>', methods=['GET'])
+def my_listing(type, user_id):
+    if type == 'date':
+        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('date', pymongo.DESCENDING))    # 최신순
+    elif type == 'view':
+        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('view', pymongo.DESCENDING))    # 조회수 순
+    elif type == 'recommend':
+        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('recommend', pymongo.DESCENDING))   # 추천수 순
+    else:
+        post = list(db.posts.find({'user_id': user_id}, {'_id': False}))  # 정렬 없음
+    return jsonify({'all_posts': post})
 
 @app.route('/api/post', methods=['POST'])
 def save_posting ():
