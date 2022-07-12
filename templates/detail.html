@@ -18,6 +18,7 @@
 
     <link href='{{ url_for("static", filename="css/header.css") }}' rel="stylesheet">
     <script type="text/javascript" src='{{ url_for("static", filename="js/header.js") }}'></script>
+    <script type="text/javascript" src='{{ url_for("static", filename="js/detail.js") }}'></script>
 
     <title>요기어때 - 동작</title>
 
@@ -71,7 +72,6 @@
 
 {% include 'header.html' %}
 
-
 <div class="container py-5">
     <div class="mb-5 title">
         제목입니다.
@@ -118,24 +118,29 @@
         <div class="input-group mb-4">
             <label for="reviewTxtArea" class="input-group-text">리뷰</label>
             <textarea id="reviewTxtArea" class="form-control" aria-label="리뷰"></textarea>
-            <button type="button" id="reviewBtn">등록</button>
+            <button type="button" id="reviewBtn" onclick="review_posting()">등록</button>
         </div>
 
         <ul class="review-list">
-            <li>
-                <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
-                    <small class="text-muted">작성자</small>
-                    <div class="d-flex flex-wrap align-items-center">
-                        <small class="text-muted me-2">2022.07.11. 09:00:00</small>
-                        <button type="button" class="btn btn-secondary btn-sm me-1">수정</button>
-                        <button type="button" class="btn btn-secondary btn-sm">삭제</button>
+            {% for review in reviews %}
+                <li>
+                    <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+                        <small class="text-muted">{{ review['user_id'] }}</small>
+                        <div class="d-flex flex-wrap align-items-center">
+                            <small class="text-muted me-2">{{ review['date'] }}</small>
+
+                            {% if review['user_id'] == user_id %}
+                                <button type="button" class="btn btn-secondary btn-sm me-1">수정</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="review_delete('{{ review['_id'] | string}}')">삭제</button>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-                <div class="review">
-                    Aliquid optio asperiores alias quae optio porro. Quis quia dolor a eligendi quam debitis quae. Iste non aut ipsum sunt omnis sint numquam. Omnis facilis et natus numquam aut et voluptatem aliquam. Voluptas deleniti quia qui maiores ut.
-                    Voluptates eveniet vel vero fuga. Ullam quas beatae optio vel mollitia totam amet. Eum eaque voluptas error labore cum ipsa eos.
-                </div>
-            </li>
+                    <div class="review">
+                        {{ review['comment'] }}
+                    </div>
+                </li>
+            {% endfor %}
+        <!-- 리뷰 라인별 주석이 있었음 좋겠다~ -->
         </ul>
     </div>
 </div>
