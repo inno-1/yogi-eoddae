@@ -15,6 +15,9 @@ db = client['yogi-eoddae']
 # [안웅기 ]JWT 토큰을 만들 때 필요한 문자열.
 SECRET_KEY = 'TEAMFIVE'
 
+# [양명규] NAVER MAP API 호출 시 필요한 문자열
+MAP_CLIENT_ID = 'bb11xjscda'
+
 # [안웅기] HTML 페이지 렌더링
 @app.route('/')
 def home():
@@ -125,6 +128,13 @@ def listing(type):
         posts = list(db.posts.find({}, {'_id': False}).sort('recommend', pymongo.DESCENDING))   # 추천수 순
     return jsonify({'all_posts': posts})
 
+# @app.route('/map', methods=['GET'])
+# def show_map():
+#     posts = listing()
+#     if len(posts['all_post']) > 0:
+#         return jsonify({'result': 'success', 'posts': posts['all_posts'], 'MAP_CLIENT_ID': MAP_CLIENT_ID})
+#     else:
+#         return jsonify({'result': 'fail', 'msg': '등록된 포스트가 없습니다.'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)
