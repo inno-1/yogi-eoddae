@@ -1,5 +1,6 @@
 import boto3
 import pymongo
+import requests
 from bson.objectid import ObjectId
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
@@ -19,6 +20,7 @@ SECRET_KEY = 'TEAMFIVE'
 
 # [양명규] NAVER MAP API 호출 시 필요한 문자열
 MAP_CLIENT_ID = 'bb11xjscda'
+MAP_CLIENT_SECRET_KEY = '7Jpoj7foQyXXfDXEdUSxlCM2wd9LG5d5WQHbv24k'
 
 # [양명규] 포스트 정렬 타입 리스트 정의
 SORT_TYPE = ['date', 'view', 'recommend']
@@ -42,6 +44,16 @@ def home():
     if len(posts) > 0:
         result['posts'] = posts
         result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
+
+    for post in posts:
+        print(post)
+
+    # headers = {
+    #     "X-NCP-APIGW-API-KEY-ID": MAP_CLIENT_ID,
+    #     "X-NCP-APIGW-API-KEY": MAP_CLIENT_SECRET_KEY
+    # }
+    # r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={address}", headers=headers)
+    # response = r.json()
 
     return render_template('index.html', result=result)
 
