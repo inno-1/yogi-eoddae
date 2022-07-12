@@ -170,6 +170,19 @@ def review_delete():
     else:
         return jsonify({'result': 'fail', 'msg' : '실패쓰'})
 
+# 댓글 수
+@app.route('/api/review', methods=['PUT'])
+def review_edit():
+
+    id_receive = request.form['id_give']
+    comment_receive = request.form['comment_give']
+    review = list(db.reviews.find_one({'_id' : ObjectId(id_receive)}))
+    if review:
+        db.reviews.update_one({'_id': ObjectId(id_receive)}, {'$set': {'comment': comment_receive}})
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'fail', 'msg' : '실패쓰'})
+
 
 # 타입을 파라미터로 받음 -> date, view, recommend
 @app.route('/post/<type>', methods=['GET'])
