@@ -74,22 +74,22 @@
 <body>
 
 {% include 'header.html' %}
-
+{% for postList in postList %}
 <div class="container py-5">
     <div class="mb-5 title">
-        제목입니다.
+        {{ postList.title }}
     </div>
 
     <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
-        <small class="text-muted">작성자</small>
-        <small class="text-muted">2022.07.11</small>
+        <small class="text-muted">{{ postList.user_id }}</small>
+        <small class="text-muted">{{ postList.date }}</small>
     </div>
 
     <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
-        <span class="address">주소 : 서울특별시 동작구 ~~</span>
+        <span class="address">주소 : {{ postList.location }}</span>
         <div class="d-flex flex-wrap align-items-center">
-            <small class="text-muted me-2">조회수 : 0</small>
-            <small class="text-muted">추천수 : 0</small>
+            <small class="text-muted me-2">조회수 : {{ postList.view }}</small>
+            <small class="text-muted">추천수 : {{ postList.recommand }}</small>
         </div>
     </div>
 
@@ -100,11 +100,7 @@
 
     <!--텍스트 내용 나오는 영역-->
     <div class="mb-5 content">
-        Aliquid optio asperiores alias quae optio porro. Quis quia dolor a eligendi quam debitis quae. Iste non aut ipsum sunt omnis sint numquam. Omnis facilis et natus numquam aut et voluptatem aliquam. Voluptas deleniti quia qui maiores ut.
-        Voluptates eveniet vel vero fuga. Ullam quas beatae optio vel mollitia totam amet. Eum eaque voluptas error labore cum ipsa eos.
-        Ut eaque et quia esse eum quis. Voluptatibus ut magni error sunt. Error molestiae non velit consequatur fuga ut. Sit nihil enim ullam odit aut quam sed. Autem est et quod sed quis molestiae iusto.
-        Nostrum nam omnis deserunt sapiente voluptas molestiae autem. Reprehenderit quas dolorem dolor. Saepe consequatur dolorem incidunt. Nobis eos ipsa doloremque necessitatibus similique et.
-        Quo quia vitae consequatur blanditiis ab quibusdam. Et dolore et odio aspernatur voluptatem tenetur alias. Hic nam et quas eos non. Non aperiam adipisci et accusantium quidem ut nam.
+        {{ postList.content }}
     </div>
 
     <div class="mb-5 text-end">
@@ -155,5 +151,6 @@
         </ul>
     </div>
 </div>
+{% endfor %}
 </body>
 </html>

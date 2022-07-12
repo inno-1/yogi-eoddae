@@ -77,13 +77,15 @@ def detail(post_id):
     token_receive = request.cookies.get('mytoken')
     cur_status, cur_user_id = token_request()
 
+    postList = list(db.posts.find({}, {"_id": False}))
+
     result = {'status' : cur_status, 'user_id' : cur_user_id}
     review_list = list(db.reviews.find({'post_id' : int(post_id)}))
     for review in review_list:
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
         review['_id'] = str(review['_id'])
 
-    return render_template('detail.html', reviews=review_list, result=result)
+    return render_template('detail.html', reviews=review_list, result=result, postList=postList)
 
 # [안웅기] 로그인을 위한 API
 
