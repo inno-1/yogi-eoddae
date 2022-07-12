@@ -1,4 +1,5 @@
 import pymongo
+from bson.objectid import ObjectId
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
 from datetime import datetime, timedelta
@@ -48,10 +49,24 @@ def posting():
 
 @app.route('/detail/<post_id>')
 def detail(post_id):
-    review_list = list(db.reviews.find({'post_id' : int(post_id)}, {'_id' : False}))
+    token_receive = request.cookies.get('mytoken')
+    curstatus = 0
+    cur_user_id = ''
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        cur_user_id = payload['id']
+        curstatus = 1
+    except jwt.ExpiredSignatureError:
+        curstatus = 0
+    except jwt.exceptions.DecodeError:
+        curstatus = 0
+
+    review_list = list(db.reviews.find({'post_id' : int(post_id)}))
     for review in review_list:
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
-    return render_template('detail.html', reviews=review_list)
+        review['_id'] = str(review['_id'])
+
+    return render_template('detail.html', reviews=review_list, status=curstatus, user_id = cur_user_id)
 
 # [안웅기] 로그인을 위한 API
 
@@ -142,6 +157,17 @@ def review_post():
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
+
+@app.route('/api/review', methods=['DELETE'])
+def review_delete():
+
+    id_receive = request.form['id_give']
+    review = list(db.reviews.find_one({'_id' : ObjectId(id_receive)}))
+    if review:
+        db.reviews.delete_one({'_id' : ObjectId(id_receive)})
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'fail', 'msg' : '실패쓰'})
 
 
 # 타입을 파라미터로 받음 -> date, view, recommend

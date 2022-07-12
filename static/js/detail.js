@@ -19,3 +19,20 @@ function review_posting(){
         }
     })
 }
+
+function review_delete(id){
+    console.log(id)
+    $.ajax({
+        type: "DELETE",
+        url: "/api/review",
+        data: {id_give: id},
+        success: function (response) {
+            if (response['result'] == 'success') {
+                window.location.reload();
+            } else {
+                // 로그인이 안되면 에러메시지를 띄웁니다.
+                alert(response['msg'])
+            }
+        }
+    })
+}
