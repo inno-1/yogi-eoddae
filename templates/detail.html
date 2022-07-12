@@ -132,7 +132,7 @@
                         <div class="d-flex flex-wrap align-items-center">
                             <small class="text-muted me-2">{{ review['date'] }}</small>
 
-                            {% if review['user_id'] == user_id %}
+                            {% if review['user_id'] == result.user_id %}
                                 <button type="button" class="btn btn-secondary btn-sm me-1" id="review-edit-button-{{ review['_id'] | string }}" onclick="review_edit_button('{{ review['_id'] | string}}')">수정</button>
                                 <button type="button" class="btn btn-secondary btn-sm" id="review-delete-button-{{ review['_id'] | string }}" onclick="review_delete('{{ review['_id'] | string}}')">삭제</button>
                                 <button type="button" class="btn btn-secondary btn-sm review-edit" id="review-edit-end-button-{{ review['_id'] | string }}" onclick="review_edit('{{ review['_id'] | string}}')">완료</button>

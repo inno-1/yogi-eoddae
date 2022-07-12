@@ -33,10 +33,8 @@ def home():
         curstatus = 1
     except jwt.ExpiredSignatureError:
         curstatus = 0
-        #return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         curstatus = 0
-        #return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
     result = {'status': curstatus}
     posts = load_posts()
@@ -74,13 +72,13 @@ def detail(post_id):
         curstatus = 0
     except jwt.exceptions.DecodeError:
         curstatus = 0
-
+    result = {'status' : curstatus, 'user_id' : cur_user_id}
     review_list = list(db.reviews.find({'post_id' : int(post_id)}))
     for review in review_list:
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
         review['_id'] = str(review['_id'])
 
-    return render_template('detail.html', reviews=review_list, status=curstatus, user_id = cur_user_id)
+    return render_template('detail.html', reviews=review_list, result=result)
 
 # [안웅기] 로그인을 위한 API
 
