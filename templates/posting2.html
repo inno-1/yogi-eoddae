@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poor+Story&display=swap" rel="stylesheet">
+
+    <title>포스팅 쓰기</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <style>
+
+
+        .writewrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .jumbotron {
+            background-color: rgb(230, 25, 78);
+        }
+
+        .jumbotron-fluid {
+            padding-right: 200px;
+            padding-left: 200px;
+        }
+
+        .container > h3 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        textarea.form-control {
+            height: 200px;
+            width: 500px;
+        }
+
+        input[type="text"] {
+
+            all: unset;
+            padding: 10px;
+            font-size: 18px;
+            border: 0;
+            border-bottom: 2px solid gray;
+        }
+
+        .writebtn {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .writebtn > button {
+
+            font-size: 15px;
+            border-radius: 5px;
+            border: 0;
+            width: 100px;
+            height: 30px;
+            font-weight: bold;
+            transition-duration: 0.5s;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .writebtn > button:hover {
+
+            background-color: white;
+            transition-duration: 0.5s;
+            color: gray;
+            border: 1px solid
+        }
+
+        .custom-file {
+        }
+
+                .filebox .upload-name {
+            display: inline-block;
+            height: 40px;
+            padding: 0 10px;
+            vertical-align: middle;
+            border: 1px solid #dddddd;
+            width: 78%;
+            color: #999999;
+        }
+
+        .filebox label {
+            display: inline-block;
+            padding: 8px 5px;
+            color: #000;
+            vertical-align: middle;
+            background-color: #d3d3d3;
+            cursor: pointer;
+            width: 60px;
+            height: 40px;
+            margin-top: 9px;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+
+        .filebox label:hover {
+            border: 1px solid;
+        }
+
+        .filebox input[type="file"] {
+            position: absolute;
+            width: 0;
+            height: 0;
+            padding: 0;
+            overflow: hidden;
+            border: 0;
+        }
+
+    </style>
+    <script>
+        function posting() {
+            let title = $('#title').val()
+            let content = $('#content').val()
+            let location = $('#location').val()
+
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+            form_data.append("file_give", file)
+            form_data.append("title_give", title)
+            form_data.append("content_give", content)
+            form_data.append("location_give", location)
+
+            $.ajax({
+                type: "POST",
+                url: "/api/post",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.href = '/'
+                }
+            })
+        }
+
+        function changeValue(input) {
+            console.log(input.files[0]);
+            document.querySelector('.upload-name').value = input.files[0].name
+
+            if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              document.getElementById('preview').src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+          } else {
+            document.getElementById('preview').src = "";
+          }
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<div class="writewrap">
+    <div style="height:150px;"></div>
+    <div class="wrap" style=" max-width: 900px; margin: auto;">
+        <div class="jumbotron jumbotron-fluid">
+
+            <div class="posting-box">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="width: 70%">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="title" placeholder="제목 입력" style="width: 92%; font-size: 16px; border-radius: 5px">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="location" placeholder="주소 입력" style="width: 92%; font-size: 16px; border-radius: 5px">
+                </div>
+                <div class="filebox" style=" margin-bottom: 15px;">
+                    <input class="upload-name" value="이미지 등록" disabled placeholder="이미지 등록" style="border-radius: 5px;">
+                    <label for="file">Browse</label>
+                    <input type="file" id="file" name="file" onchange="changeValue(this)" accept="image/*">
+                </div>
+                        </div>
+                    <div>
+                        <img id="preview" alt="thumbnail" width="120">
+                    </div>
+                    </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="content"
+                              placeholder="내용 입력"></textarea>
+                </div>
+
+                <div class="writebtn">
+                    <button onclick="posting()">
+                        저장하기
+                    </button>
+                    <button onclick= "window.location.href = '/'">
+                        돌아가기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
