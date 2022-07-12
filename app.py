@@ -23,7 +23,9 @@ MAP_CLIENT_ID = 'bb11xjscda'
 # [양명규] 포스트 정렬 타입 리스트 정의
 SORT_TYPE = ['date', 'view', 'recommend']
 
-# [안웅기] 토큰 리퀘스트
+# [안웅기] 토큰 리퀘스트 요청한 클라이언트의 토큰을 반환
+# 첫번째 반환값 int : 1 - 로그인 상태, 2 - 로그인 기한 만료, 3 - 로그인 하지 않은 상태
+# 두번째 반환값 str : 로그인 상태일 경우 해당 유저의 아이디를 반환, 아닐 경우 빈칸
 def token_request():
     token_receive = request.cookies.get('mytoken')
     cur_status = 0
