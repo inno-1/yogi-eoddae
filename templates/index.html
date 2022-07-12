@@ -19,6 +19,7 @@
     <link href='{{ url_for("static", filename="css/header.css") }}' rel="stylesheet">
     <link href='{{ url_for("static", filename="css/main.css") }}' rel="stylesheet">
     <script type="text/javascript" src='{{ url_for("static", filename="js/header.js") }}'></script>
+    <script type="text/javascript" src='{{ url_for("static", filename="js/index.js") }}'></script>
 
     <title>요기어때 - 동작</title>
 
@@ -65,7 +66,7 @@
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div class="col">
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm" onclick="post_detail(1)">
                         <div class="card-img-top"></div>
 
                         <div class="card-body">
