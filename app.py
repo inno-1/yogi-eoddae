@@ -1,3 +1,4 @@
+import boto3
 import pymongo
 from bson.objectid import ObjectId
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
@@ -197,8 +198,21 @@ def my_listing(type, user_id):
         post = list(db.posts.find({'user_id': user_id}, {'_id': False}))  # 정렬 없음
     return jsonify({'all_posts': post})
 
+
+ACCESS_KEY_ID = 'AKIAXX6AEBP75R7DMAON'      # 액세스 키 (효원 문의)
+ACCESS_SECRET_KEY = 'hEaHB+f8yJY7003yn2nT0znN+6/5hnnndvMUh0+p'
+BUCKET_NAME = 'yogi-eoddae-bucket'
+
+def s3_connection():
+    s3 = boto3.client('s3',
+        aws_access_key_id=ACCESS_KEY_ID,
+        aws_secret_access_key=ACCESS_SECRET_KEY)
+    return s3
+
+s3 = s3_connection()
+
 @app.route('/api/post', methods=['POST'])
-def save_posting ():
+def save_posting():
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     location_receive = request.form['location_give']
@@ -210,10 +224,16 @@ def save_posting ():
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
 
-    filename = f'file-{mytime}'
+    filename = f'post id-{mytime}'
 
-    save_to = f'static/img/{filename}.{extension}'
-    file.save(save_to)
+    # save_to = f'static/img/{filename}.{extension}'
+    # file.save(save_to)
+
+    s3.put_object(
+        Bucket=BUCKET_NAME,
+        Body=file,
+        Key=filename,
+        ContentType=file.content_type)
 
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -224,9 +244,8 @@ def save_posting ():
         'user_id': payload['id'],
         'content': content_receive,
         'location': location_receive,
-        'file': f'{filename}.{extension}'
+        'file': f'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/{filename}.{extension}'
     }
-
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
 
