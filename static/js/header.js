@@ -1,10 +1,15 @@
+window.onpageshow = function (event){
+    // [안웅기] 로그인 후 원래화면으로 돌아갔을 때 헤더 값들이 변하지 않아 추가 리로드
+    if(event.persisted || (window.performance && window.performance.navigation.type == 2)){
+        window.location.reload();
+    }
+}
 function logout(){
-    if($.removeCookie('mytoken')){
+    if($.removeCookie('mytoken', {path: '/'})){
 
         alert('로그아웃!')
         window.location.reload()
     }
-    console.log($.cookie('mytoken'))
 }
 
 function check_login(){
