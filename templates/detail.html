@@ -88,7 +88,7 @@
         <span class="address">주소 : {{ post.location }}</span>
         <div class="d-flex flex-wrap align-items-center">
             <small class="text-muted me-2">조회수 : {{ post.view }}</small>
-            <small class="text-muted">추천수 : {{ post.recommend }}</small>
+            <small class="text-muted">추천수 : {{ post.recommend_count }}</small>
         </div>
     </div>
 
@@ -103,7 +103,7 @@
     </div>
 
     <div class="mb-5 text-end">
-        <button type="button" class="btn btn-point">추천하기</button>
+        <button type="button" class="btn btn-point" onclick="recommend('{{ post['_id'] | string}}')">추천하기</button>
     </div>
 
     <div class="d-flex flex-wrap align-items-center justify-content-center mb-5">
