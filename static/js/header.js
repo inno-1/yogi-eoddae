@@ -5,9 +5,8 @@ window.onpageshow = function (event){
     }
 }
 function logout(){
+    
     if($.removeCookie('mytoken', {path: '/'})){
-
-        alert('로그아웃!')
         window.location.reload()
     }
 }
