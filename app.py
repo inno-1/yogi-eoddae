@@ -49,12 +49,13 @@ def home():
     cur_status, cur_id = token_request()
 
     result = {'status': cur_status}
-    post_list = load_posts()
+    post_list = list(db.posts.find({}))
 
     if len(post_list) > 0:
-        result['posts'] = post_list
         for post in post_list:
             post['_id'] = str(post['_id'])
+
+        result['posts'] = post_list
 
     result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
 
