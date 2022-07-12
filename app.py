@@ -240,6 +240,7 @@ def s3_connection():
 
 s3 = s3_connection()
 
+# 포스팅
 @app.route('/api/post', methods=['POST'])
 def save_posting():
     title_receive = request.form['title_give']
@@ -267,7 +268,12 @@ def save_posting():
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
+
+    post_list= list(db.posts.find({}, {"_id":False}))
+    count = len(post_list) + 1
+
     doc = {
+        'post_id': count,
         'title': title_receive,
         'date': datetime.now(),
         'user_id': payload['id'],
