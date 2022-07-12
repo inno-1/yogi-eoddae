@@ -237,7 +237,7 @@ def save_posting():
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
 
-    filename = f'post id-{mytime}'
+    filename = f'post id-{mytime}.{extension}'
 
     # save_to = f'static/img/{filename}.{extension}'
     # file.save(save_to)
@@ -257,7 +257,7 @@ def save_posting():
         'user_id': payload['id'],
         'content': content_receive,
         'location': location_receive,
-        'file': f'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/{filename}.{extension}'
+        'file': 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename
     }
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
