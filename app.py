@@ -159,14 +159,19 @@ def api_valid():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
-# [안웅기] 추천하
+# [안웅기] 추천하기
 @app.route('/api/post-recommend', methods=['POST'])
 def post_recommend():
     cur_status, cur_user_id = token_request()
     id_receive = request.form['id_give']
+    result = db.posts.find_one({'_id': ObjectId(id_receive)})
 
     if cur_status == 1:
-        return jsonify({'result': 'success'})
+        if cur_user_id in result['recommend']:
+            return jsonify({'result': 'fail', 'msg': '이미 추천하셨습니다.'})
+        else:
+            db.posts.update_one({'_id': ObjectId(id_receive)}, {'$push': { 'recommend' : cur_user_id}})
+            return jsonify({'result': 'success'})
     elif cur_status == 2:
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     else:
@@ -278,7 +283,7 @@ def save_posting():
         'content': content_receive,
         'location': location_receive,
         'view': 0,
-        'recommend': 0
+        'recommend': []
     }
 
     # 파일 첨부했을때만 추가
@@ -323,4 +328,4 @@ def save_posting():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5001, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
