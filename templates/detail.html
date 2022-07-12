@@ -63,6 +63,9 @@
             background-color: #6c757d;
             border-color: #6c757d;
         }
+        .review-edit{
+            display: none;
+        }
 
     </style>
 
@@ -130,17 +133,25 @@
                             <small class="text-muted me-2">{{ review['date'] }}</small>
 
                             {% if review['user_id'] == user_id %}
-                                <button type="button" class="btn btn-secondary btn-sm me-1">수정</button>
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="review_delete('{{ review['_id'] | string}}')">삭제</button>
+                                <button type="button" class="btn btn-secondary btn-sm me-1" id="review-edit-button-{{ review['_id'] | string }}" onclick="review_edit_button('{{ review['_id'] | string}}')">수정</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="review-delete-button-{{ review['_id'] | string }}" onclick="review_delete('{{ review['_id'] | string}}')">삭제</button>
+                                <button type="button" class="btn btn-secondary btn-sm review-edit" id="review-edit-end-button-{{ review['_id'] | string }}" onclick="review_edit('{{ review['_id'] | string}}')">완료</button>
+                                <button type="button" class="btn btn-secondary btn-sm review-edit" id="review-edit-cancel-button-{{ review['_id'] | string }}" onclick="review_edit_cancel('{{ review['_id'] | string}}')">취소</button>
+
                             {% endif %}
                         </div>
                     </div>
-                    <div class="review">
+                    <!-- 보기 모드 -->
+                    <div class="review" id="review-{{ review['_id'] | string }}">
                         {{ review['comment'] }}
+                    </div>
+                    <!-- 수정 모드 -->
+                    <div class="review-edit" id="review-edit-{{ review['_id'] | string }}">
+                        <textarea id="reviewTxtArea-{{ review['_id'] | string }}" class="form-control" aria-label="리뷰">{{ review['comment'] }}</textarea>
                     </div>
                 </li>
             {% endfor %}
-        <!-- 리뷰 라인별 주석이 있었음 좋겠다~ -->
+        <!-- 리뷰 라인별 구분 선이 있었음 좋겠다~ -->
         </ul>
     </div>
 </div>
