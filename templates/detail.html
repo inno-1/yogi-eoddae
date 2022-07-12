@@ -74,22 +74,21 @@
 <body>
 
 {% include 'header.html' %}
-{% for postList in postList %}
 <div class="container py-5">
     <div class="mb-5 title">
-        {{ postList.title }}
+        {{ post.title }}
     </div>
 
     <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
-        <small class="text-muted">{{ postList.user_id }}</small>
-        <small class="text-muted">{{ postList.date }}</small>
+        <small class="text-muted">{{ post.user_id }}</small>
+        <small class="text-muted">{{ post.date }}</small>
     </div>
 
     <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
-        <span class="address">주소 : {{ postList.location }}</span>
+        <span class="address">주소 : {{ post.location }}</span>
         <div class="d-flex flex-wrap align-items-center">
-            <small class="text-muted me-2">조회수 : {{ postList.view }}</small>
-            <small class="text-muted">추천수 : {{ postList.recommend }}</small>
+            <small class="text-muted me-2">조회수 : {{ post.view }}</small>
+            <small class="text-muted">추천수 : {{ post.recommend }}</small>
         </div>
     </div>
 
@@ -100,7 +99,7 @@
 
     <!--텍스트 내용 나오는 영역-->
     <div class="mb-5 content">
-        {{ postList.content }}
+        {{ post.content }}
     </div>
 
     <div class="mb-5 text-end">
@@ -117,7 +116,7 @@
         <div class="input-group mb-4">
             <label for="reviewTxtArea" class="input-group-text">리뷰</label>
             <textarea id="reviewTxtArea" class="form-control" aria-label="리뷰"></textarea>
-            <button type="button" id="reviewBtn" onclick="review_posting()">등록</button>
+            <button type="button" id="reviewBtn" onclick="review_posting('{{ post['_id'] | string}}')">등록</button>
         </div>
 
         <ul class="review-list">
@@ -151,6 +150,5 @@
         </ul>
     </div>
 </div>
-{% endfor %}
 </body>
 </html>

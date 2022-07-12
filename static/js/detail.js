@@ -1,4 +1,4 @@
-function review_posting(){
+function review_posting(id){
 
     let comment = $('#reviewTxtArea').val();
     if(comment == ''){
@@ -8,7 +8,7 @@ function review_posting(){
     $.ajax({
         type: "POST",
         url: "/api/review",
-        data: {comment_give: comment},
+        data: {comment_give: comment, id_give: id},
         success: function (response) {
             if (response['result'] == 'success') {
                 window.location.reload();

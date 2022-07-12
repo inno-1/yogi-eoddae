@@ -47,7 +47,9 @@ def token_request():
 @app.route('/')
 def home():
 
-    postList = list(db.posts.find({}, {"_id":False}))
+    postList = list(db.posts.find({}))
+    for post in postList:
+        post['_id'] = str(post['_id'])
 
     cur_status, cur_id = token_request()
 
@@ -97,15 +99,15 @@ def detail(post_id):
     token_receive = request.cookies.get('mytoken')
     cur_status, cur_user_id = token_request()
 
-    postList = list(db.posts.find({}, {"_id": False}))
-
+    post = db.posts.find_one({'_id' : ObjectId(post_id)})
+    print(post)
     result = {'status' : cur_status, 'user_id' : cur_user_id}
-    review_list = list(db.reviews.find({'post_id' : int(post_id)}))
+    review_list = list(db.reviews.find({'post_id' : ObjectId(post_id)}))
     for review in review_list:
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
         review['_id'] = str(review['_id'])
 
-    return render_template('detail.html', reviews=review_list, result=result, postList=postList)
+    return render_template('detail.html', reviews=review_list, result=result, post=post)
 
 # [안웅기] 로그인을 위한 API
 
@@ -182,8 +184,9 @@ def api_valid():
 def review_post():
     cur_status, cur_user_id = token_request()
     comment_receive = request.form['comment_give']
+    id_receive = request.form['id_give']
     doc = {
-        'post_id': 1,
+        'post_id': ObjectId(id_receive),
         'user_id': cur_user_id,
         'comment': comment_receive,
         'date': datetime.now()
@@ -313,4 +316,4 @@ def save_posting():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5001, debug=True)
