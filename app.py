@@ -1,4 +1,6 @@
+import boto3
 import pymongo
+from bson.objectid import ObjectId
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
 from datetime import datetime, timedelta
@@ -48,10 +50,24 @@ def posting():
 
 @app.route('/detail/<post_id>')
 def detail(post_id):
-    review_list = list(db.reviews.find({'post_id' : int(post_id)}, {'_id' : False}))
+    token_receive = request.cookies.get('mytoken')
+    curstatus = 0
+    cur_user_id = ''
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        cur_user_id = payload['id']
+        curstatus = 1
+    except jwt.ExpiredSignatureError:
+        curstatus = 0
+    except jwt.exceptions.DecodeError:
+        curstatus = 0
+
+    review_list = list(db.reviews.find({'post_id' : int(post_id)}))
     for review in review_list:
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
-    return render_template('detail.html', reviews=review_list)
+        review['_id'] = str(review['_id'])
+
+    return render_template('detail.html', reviews=review_list, status=curstatus, user_id = cur_user_id)
 
 # [안웅기] 로그인을 위한 API
 
@@ -143,6 +159,17 @@ def review_post():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
+@app.route('/api/review', methods=['DELETE'])
+def review_delete():
+
+    id_receive = request.form['id_give']
+    review = list(db.reviews.find_one({'_id' : ObjectId(id_receive)}))
+    if review:
+        db.reviews.delete_one({'_id' : ObjectId(id_receive)})
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'fail', 'msg' : '실패쓰'})
+
 
 # 타입을 파라미터로 받음 -> date, view, recommend
 @app.route('/post/<type>', methods=['GET'])
@@ -171,8 +198,21 @@ def my_listing(type, user_id):
         post = list(db.posts.find({'user_id': user_id}, {'_id': False}))  # 정렬 없음
     return jsonify({'all_posts': post})
 
+
+ACCESS_KEY_ID = 'AKIAXX6AEBP75R7DMAON'      # 액세스 키 (효원 문의)
+ACCESS_SECRET_KEY = 'hEaHB+f8yJY7003yn2nT0znN+6/5hnnndvMUh0+p'
+BUCKET_NAME = 'yogi-eoddae-bucket'
+
+def s3_connection():
+    s3 = boto3.client('s3',
+        aws_access_key_id=ACCESS_KEY_ID,
+        aws_secret_access_key=ACCESS_SECRET_KEY)
+    return s3
+
+s3 = s3_connection()
+
 @app.route('/api/post', methods=['POST'])
-def save_posting ():
+def save_posting():
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     location_receive = request.form['location_give']
@@ -184,10 +224,16 @@ def save_posting ():
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
 
-    filename = f'file-{mytime}'
+    filename = f'post id-{mytime}'
 
-    save_to = f'static/img/{filename}.{extension}'
-    file.save(save_to)
+    # save_to = f'static/img/{filename}.{extension}'
+    # file.save(save_to)
+
+    s3.put_object(
+        Bucket=BUCKET_NAME,
+        Body=file,
+        Key=filename,
+        ContentType=file.content_type)
 
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -198,9 +244,8 @@ def save_posting ():
         'user_id': payload['id'],
         'content': content_receive,
         'location': location_receive,
-        'file': f'{filename}.{extension}'
+        'file': f'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/{filename}.{extension}'
     }
-
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
 
