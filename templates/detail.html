@@ -74,7 +74,6 @@
 <body>
 
 {% include 'header.html' %}
-{% for post in result.posts %}
 <div class="container py-5">
     <h1 class="mb-5 title">
         {{ post.title }}
@@ -95,7 +94,7 @@
 
     <!--첨부한 이미지 나오는 영역-->
     <div class="mb-5 text-center">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="게시글 썸네일">
+        <img src="{{post.file}}" onerror='this.onerror=null; this.src="../static/img/logo.png";'>
     </div>
 
     <!--텍스트 내용 나오는 영역-->
@@ -117,7 +116,7 @@
         <div class="input-group mb-4">
             <label for="reviewTxtArea" class="input-group-text">리뷰</label>
             <textarea id="reviewTxtArea" class="form-control" aria-label="리뷰"></textarea>
-            <button type="button" id="reviewBtn" onclick="review_posting()">등록</button>
+            <button type="button" id="reviewBtn" onclick="review_posting('{{ post['_id'] | string}}')">등록</button>
         </div>
 
         <ul class="review-list">
@@ -151,6 +150,5 @@
         </ul>
     </div>
 </div>
-{% endfor %}
 </body>
 </html>
