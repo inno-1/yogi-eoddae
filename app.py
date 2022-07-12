@@ -1,7 +1,7 @@
 import pymongo
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, timedelta
 import certifi
 import jwt
 import hashlib
@@ -94,7 +94,7 @@ def api_login():
     if result is not None:
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=360)
+            'exp': datetime.utcnow() + timedelta(seconds=360)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -134,7 +134,7 @@ def review_post():
             'post_id' : 1,
             'user_id' : payload['id'],
             'comment' : comment_receive,
-            'date' : datetime.datetime.now()
+            'date' : datetime.now()
         }
         db.reviews.insert_one(doc)
         return jsonify({'result': 'success'})
