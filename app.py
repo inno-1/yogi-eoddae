@@ -1,5 +1,6 @@
 import boto3
 import pymongo
+import json
 import requests
 from bson.objectid import ObjectId
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
@@ -45,15 +46,23 @@ def home():
         result['posts'] = posts
         result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
 
-    for post in posts:
-        print(post)
+    headers = {
+        "X-NCP-APIGW-API-KEY-ID": MAP_CLIENT_ID,
+        "X-NCP-APIGW-API-KEY": MAP_CLIENT_SECRET_KEY
+    }
 
-    # headers = {
-    #     "X-NCP-APIGW-API-KEY-ID": MAP_CLIENT_ID,
-    #     "X-NCP-APIGW-API-KEY": MAP_CLIENT_SECRET_KEY
-    # }
-    # r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={address}", headers=headers)
-    # response = r.json()
+    for post in posts:
+        r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={post['location']}",
+                         headers=headers)
+        response = r.json()
+
+        if response["status"] == "OK":
+            if len(response["addresses"]) > 0:
+                x = float(response["addresses"][0]["x"])
+                y = float(response["addresses"][0]["y"])
+                post['point'] = {'x':x, 'y':y}
+            else:
+                print("좌표를 찾지 못했습니다")
 
     return render_template('index.html', result=result)
 
