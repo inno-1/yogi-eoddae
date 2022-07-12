@@ -82,7 +82,8 @@ def detail(post_id):
     token_receive = request.cookies.get('mytoken')
     cur_status, cur_user_id = token_request()
 
-    post = db.posts.find_one({'_id': ObjectId(post_id)})
+    post = db.posts.find_one({'_id' : ObjectId(post_id)})
+    post['recommend_count'] = len(post['recommend'])
     print(post)
     result = {'status': cur_status, 'user_id': cur_user_id}
     review_list = list(db.reviews.find({'post_id': ObjectId(post_id)}))
@@ -158,7 +159,18 @@ def api_valid():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
+# [안웅기] 추천하
+@app.route('/api/post-recommend', methods=['POST'])
+def post_recommend():
+    cur_status, cur_user_id = token_request()
+    id_receive = request.form['id_give']
 
+    if cur_status == 1:
+        return jsonify({'result': 'success'})
+    elif cur_status == 2:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    else:
+        return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 # [안웅기] 리뷰 API
 # 목록 조회는 페이지 오픈 시에! -> jinja2로
 
@@ -193,7 +205,7 @@ def review_delete():
     else:
         return jsonify({'result': 'fail', 'msg' : '실패쓰'})
 
-# 댓글 수
+# 댓글 수정
 @app.route('/api/review', methods=['PUT'])
 def review_edit():
 
@@ -278,9 +290,6 @@ def save_posting():
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
-
-    post_list= list(db.posts.find({}, {"_id":False}))
-
     doc = {
         'title': title_receive,
         'date': datetime.now(),
@@ -289,7 +298,7 @@ def save_posting():
         'location': location_receive,
         'file': 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename,
         'view': 0,
-        'recommand': 0
+        'recommend': 0
     }
 
     # [양명규] 입력한 주소를 x,y 좌표로 변환
@@ -312,4 +321,4 @@ def save_posting():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5001, debug=True)
