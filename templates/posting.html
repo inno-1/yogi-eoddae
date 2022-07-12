@@ -32,45 +32,43 @@
             font-weight: 700;
         }
 
-        textarea.form-control {
-            height: 150px;
-        }
-
-        input[type="text"] {
-
-            all: unset;
-            padding: 10px;
-            font-size: 18px;
-            border: 0;
-            width: 96.8%;
-            border-bottom: 2px solid gray;
-        }
-
-        .writebtn {
+        .form-group {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
         }
 
-        .writebtn > button {
-
-            font-size: 17px;
-            border: 0;
+        .form-group .form-label {
             width: 100px;
-            height: 30px;
-            font-weight: bold;
-            transition-duration: 0.5s;
-            cursor: pointer;
         }
 
-        .writebtn > button:hover {
-
-            background-color: white;
-            transition-duration: 0.5s;
-            color: gray;
+        .form-group input {
+            font-size: 16px;
+            flex: 1 0 calc(100% - 100px);
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid gray;
+            border-radius: 0;
         }
 
-        .custom-file {
+        .form-group.file input {
+            flex: initial;
+            width: calc(100% - 186px);
         }
+
+        .form-group input[type=file] {
+            width: 0;
+            height: 0;
+            padding: 0;
+            border: none;
+        }
+
+        textarea.form-control {
+            font-size: 16px;
+            flex: 1 0 calc(100% - 100px);
+            padding: 10px;
+            height: 250px;
+        }
+
     </style>
 
 </head>
@@ -84,28 +82,30 @@
             포스트 작성
         </h1>
         <div class="posting-box">
-            <div class="form-group">
-                <label for="title">제목</label>
+            <div class="form-group mb-3">
+                <label class="form-label" for="title">제목</label>
                 <input type="text" class="form-control" id="title" placeholder="제목 입력">
             </div>
-            <div class="custom-file" style="margin-bottom: 15px;">
-                <input type="text" class="custom-file-input" id="file-text">
-                <input type="file" id="file">
-                <label class="custom-file-label" for="file">이미지 등록</label>
+            <div class="form-group file mb-3">
+                <span class="form-label">이미지</span>
+                <input type="text" class="custom-file-input" id="file-text" placeholder="이미지 등록" readonly>
+                <input type="file" id="file" accept="image/*">
+                <label class="btn btn-point" for="file">파일 첨부</label>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
+                <label class="form-label" for="location">주소</label>
                 <input type="text" class="form-control" id="location" placeholder="주소 입력">
             </div>
-            <div class="form-group">
-                <textarea class="form-control" id="content"
-                          placeholder="내용 입력"></textarea>
+            <div class="form-group mb-5">
+                <label class="form-label" for="content">내용</label>
+                <textarea class="form-control" id="content" placeholder="내용 입력"></textarea>
             </div>
 
-            <div class="writebtn">
-                <button onclick="posting()">
+            <div class="d-flex align-item-center justify-content-center">
+                <button onclick="posting()" class="btn btn-point me-2">
                     저장하기
                 </button>
-                <button onclick= "window.location.href = '/'">
+                <button onclick= "window.location.href = '/'" class="btn btn-point">
                     돌아가기
                 </button>
             </div>

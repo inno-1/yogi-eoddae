@@ -268,25 +268,6 @@ def save_posting():
     content_receive = request.form['content_give']
     location_receive = request.form['location_give']
 
-    file = request.files['file_give']
-
-    extension = file.filename.split('.')[-1]
-
-    today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-
-    filename = f'post id-{mytime}.{extension}'
-
-    # save_to = f'static/img/{filename}.{extension}'
-    # file.save(save_to)
-
-    s3.put_object(
-        ACL="public-read",
-        Bucket=BUCKET_NAME,
-        Body=file,
-        Key=filename,
-        ContentType=file.content_type)
-
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
@@ -296,10 +277,31 @@ def save_posting():
         'user_id': payload['id'],
         'content': content_receive,
         'location': location_receive,
-        'file': 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename,
         'view': 0,
         'recommend': 0
     }
+
+    # 파일 첨부했을때만 추가
+    if len(request.files) > 0 :
+        file = request.files['file_give']
+        extension = file.filename.split('.')[-1]
+
+        today = datetime.now()
+        mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+
+        filename = f'post id-{mytime}.{extension}'
+
+        # save_to = f'static/img/{filename}.{extension}'
+        # file.save(save_to)
+
+        s3.put_object(
+            ACL="public-read",
+            Bucket=BUCKET_NAME,
+            Body=file,
+            Key=filename,
+            ContentType=file.content_type)
+
+        doc['file'] = 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename
 
     # [양명규] 입력한 주소를 x,y 좌표로 변환
     headers = {
