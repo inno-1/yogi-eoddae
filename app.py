@@ -20,6 +20,9 @@ SECRET_KEY = 'TEAMFIVE'
 # [양명규] NAVER MAP API 호출 시 필요한 문자열
 MAP_CLIENT_ID = 'bb11xjscda'
 
+# [양명규] 포스트 정렬 타입 리스트 정의
+SORT_TYPE = ['date', 'view', 'recommend']
+
 # [안웅기] HTML 페이지 렌더링
 @app.route('/')
 def home():
@@ -35,7 +38,14 @@ def home():
         curstatus = 0
         #return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
-    return render_template('index.html', status=curstatus)
+    result = {'status': curstatus}
+    posts = load_posts()
+
+    if len(posts) > 0:
+        result['posts'] = posts
+        result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
+
+    return render_template('index.html', result=result)
 
 @app.route('/login')
 def login():
@@ -173,19 +183,21 @@ def review_delete():
     else:
         return jsonify({'result': 'fail', 'msg' : '실패쓰'})
 
+def load_posts(type = 'all'):
+    if type == 'all':
+        return list(db.posts.find({}, {'_id': False}))  # 정렬 없음
+    else:
+        return list(db.posts.find({}, {'_id': False}).sort(type, pymongo.DESCENDING))  # 최신순
 
 # 타입을 파라미터로 받음 -> date, view, recommend
 @app.route('/post/<type>', methods=['GET'])
 def all_listing(type):
-    if type == 'date':
-        post = list(db.posts.find({}, {'_id': False}).sort('date', pymongo.DESCENDING))    # 최신순
-    elif type == 'view':
-        post = list(db.posts.find({}, {'_id': False}).sort('view', pymongo.DESCENDING))    # 조회수 순
-    elif type == 'recommend':
-        post = list(db.posts.find({}, {'_id': False}).sort('recommend', pymongo.DESCENDING))   # 추천수 순
+    if type in SORT_TYPE:
+        posts = load_posts(type)
     else:
-        post = list(db.posts.find({}, {'_id': False}))  # 정렬 없음
-    return jsonify({'all_posts': post})
+        posts = load_posts()
+
+    return jsonify({'all_posts': posts})
 
 
 # 로그인 된 유저 id를 받음
@@ -251,14 +263,6 @@ def save_posting():
     }
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
-
-# @app.route('/map', methods=['GET'])
-# def show_map():
-#     posts = listing()
-#     if len(posts['all_post']) > 0:
-#         return jsonify({'result': 'success', 'posts': posts['all_posts'], 'MAP_CLIENT_ID': MAP_CLIENT_ID})
-#     else:
-#         return jsonify({'result': 'fail', 'msg': '등록된 포스트가 없습니다.'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)
