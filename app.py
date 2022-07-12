@@ -46,9 +46,12 @@ def register():
 def posting():
     return render_template('posting.html')
 
-@app.route('/detail')
-def detail():
-    return render_template('detail.html')
+@app.route('/detail/<post_id>')
+def detail(post_id):
+    review_list = list(db.reviews.find({'post_id' : post_id}, {'_id': False}))
+    for review in review_list:
+        review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
+    return render_template('detail.html', reviews=review_list)
 
 # [안웅기] 로그인을 위한 API
 
@@ -101,19 +104,44 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
+# [안웅기] 현재 로그인 상태 valid 체크
+# 로그인이 되어있으면 'result'로 'success'와 'id' 값을 반환
+# 안되어 있으면 'result'로 'fail'과 'msg' 값을 반환
 @app.route('/api/check', methods=['GET'])
 def api_valid():
     token_receive = request.cookies.get('mytoken')
-
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-
-        return jsonify({'result': 'success'})
+        return jsonify({'result': 'success', 'id': payload['id']})
     except jwt.ExpiredSignatureError:
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
+
+# [안웅기] 리뷰 API
+# 목록 조회는 페이지 오픈 시에! -> jinja2로
+
+# 리뷰 작성
+@app.route('/api/review', methods=['POST'])
+def review_post():
+    token_receive = request.cookies.get('mytoken')
+
+    comment_receive = request.form['comment_give']
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        doc = {
+            'post_id' : 1,
+            'user_id' : payload['id'],
+            'comment' : comment_receive,
+            'date' : datetime.datetime.now()
+        }
+        db.reviews.insert_one(doc)
+        return jsonify({'result': 'success'})
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
 @app.route('/listing/<type>', methods=['GET'])
 def listing(type):
