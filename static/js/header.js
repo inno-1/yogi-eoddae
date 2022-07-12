@@ -14,7 +14,7 @@ function check_login(){
         data: {},
         success: function (response) {
             if (response['result'] == 'success') {
-                window.location.href = '/'
+                window.location.href = '/posting'
             } else {
                 // 로그인이 안되면 에러메시지를 띄웁니다.
                 alert(response['msg'])
