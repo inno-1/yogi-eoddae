@@ -297,10 +297,8 @@ def save_posting():
 
 
     post_list= list(db.posts.find({}, {"_id":False}))
-    count = len(post_list) + 1
 
     doc = {
-        'id': count,
         'title': title_receive,
         'date': datetime.now(),
         'user_id': payload['id'],

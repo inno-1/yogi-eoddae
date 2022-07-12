@@ -71,9 +71,9 @@
                 {% for post in postList %}
                 <div class="col">
                     <div class="card shadow-sm" onclick="post_detail('{{ post['_id'] | string}}')">
-                        <div class="card-img-top"></div>
+                        <img src="{{post.file}}" onerror='this.onerror=null; this.src="../static/img/logo.png";'>
                         <div class="card-body">
-                            <p class="card-text">{{post.title}}.</p>
+                            <p class="card-text">{{post.title}}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <small class="text-muted">{{ post.user_id }}</small>
                                 <small class="text-muted">{{ post.date }}</small>
