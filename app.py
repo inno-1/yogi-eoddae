@@ -1,6 +1,7 @@
 import pymongo
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 from pymongo import MongoClient
+from datetime import datetime
 import certifi
 import jwt
 import datetime
@@ -124,6 +125,34 @@ def listing(type):
     else:
         posts = list(db.posts.find({}, {'_id': False}).sort('recommend', pymongo.DESCENDING))   # 추천수 순
     return jsonify({'all_posts': posts})
+
+@app.route('/api/post', methods=['POST'])
+def save_posting ():
+    title_receive = request.form['title_give']
+    content_receive = request.form['content_give']
+    location_receive = request.form['location_give']
+
+    file = request.files['file_give']
+
+    extension = file.filename.split('.')[-1]
+
+    today = datetime.datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+
+    filename = f'file-{mytime}'
+
+    save_to = f'static/img/{filename}.{extension}'
+    file.save(save_to)
+
+    doc = {
+        'title': title_receive,
+        'content': content_receive,
+        'location': location_receive,
+        'file': f'{filename}.{extension}'
+    }
+
+    db.posts.insert_one(doc)
+    return jsonify({'msg': '저장 완료!'})
 
 
 if __name__ == '__main__':
