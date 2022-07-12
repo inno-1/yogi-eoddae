@@ -68,19 +68,20 @@
             </div>
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% for postList in postList %}
                 <div class="col">
                     <div class="card shadow-sm" onclick="post_detail(1)">
                         <div class="card-img-top"></div>
-
                         <div class="card-body">
-                            <p class="card-text">제목입니다.</p>
+                            <p class="card-text">{{postList.title}}.</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">작성자</small>
-                                <small class="text-muted">2022.07.11</small>
+                                <small class="text-muted">{{ postList.user_id }}</small>
+                                <small class="text-muted">{{ postList.date }}</small>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>

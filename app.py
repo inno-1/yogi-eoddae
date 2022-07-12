@@ -1,6 +1,5 @@
 import boto3
 import pymongo
-import json
 import requests
 from bson.objectid import ObjectId
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
@@ -26,20 +25,33 @@ MAP_CLIENT_SECRET_KEY = '7Jpoj7foQyXXfDXEdUSxlCM2wd9LG5d5WQHbv24k'
 # [양명규] 포스트 정렬 타입 리스트 정의
 SORT_TYPE = ['date', 'view', 'recommend']
 
+# [안웅기] 토큰 리퀘스트 요청한 클라이언트의 토큰을 반환
+# 첫번째 반환값 int : 1 - 로그인 상태, 2 - 로그인 기한 만료, 3 - 로그인 하지 않은 상태
+# 두번째 반환값 str : 로그인 상태일 경우 해당 유저의 아이디를 반환, 아닐 경우 빈칸
+def token_request():
+    token_receive = request.cookies.get('mytoken')
+    cur_status = 0
+    cur_id = ''
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        cur_status = 1
+        cur_id = payload['id']
+    except jwt.ExpiredSignatureError:
+        cur_status = 2
+    except jwt.exceptions.DecodeError:
+        curstatus = 3
+
+    return cur_status, cur_id
+
 # [안웅기] HTML 페이지 렌더링
 @app.route('/')
 def home():
-    token_receive = request.cookies.get('mytoken')
-    curstatus = 0
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        curstatus = 1
-    except jwt.ExpiredSignatureError:
-        curstatus = 0
-    except jwt.exceptions.DecodeError:
-        curstatus = 0
 
-    result = {'status': curstatus}
+    postList = list(db.posts.find({}, {"_id":False}))
+
+    cur_status, cur_id = token_request()
+
+    result = {'status': cur_status}
     posts = load_posts()
 
     if len(posts) > 0:
@@ -60,11 +72,11 @@ def home():
             if len(response["addresses"]) > 0:
                 x = float(response["addresses"][0]["x"])
                 y = float(response["addresses"][0]["y"])
-                post['point'] = {'x':x, 'y':y}
+                post['point'] = {'x': x, 'y': y}
             else:
                 print("좌표를 찾지 못했습니다")
 
-    return render_template('index.html', result=result)
+    return render_template('index.html', result=result, postList=postList)
 
 @app.route('/login')
 def login():
@@ -83,23 +95,17 @@ def posting():
 @app.route('/detail/<post_id>')
 def detail(post_id):
     token_receive = request.cookies.get('mytoken')
-    curstatus = 0
-    cur_user_id = ''
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        cur_user_id = payload['id']
-        curstatus = 1
-    except jwt.ExpiredSignatureError:
-        curstatus = 0
-    except jwt.exceptions.DecodeError:
-        curstatus = 0
-    result = {'status' : curstatus, 'user_id' : cur_user_id}
+    cur_status, cur_user_id = token_request()
+
+    postList = list(db.posts.find({}, {"_id": False}))
+
+    result = {'status' : cur_status, 'user_id' : cur_user_id}
     review_list = list(db.reviews.find({'post_id' : int(post_id)}))
     for review in review_list:
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
         review['_id'] = str(review['_id'])
 
-    return render_template('detail.html', reviews=review_list, result=result)
+    return render_template('detail.html', reviews=review_list, result=result, postList=postList)
 
 # [안웅기] 로그인을 위한 API
 
@@ -157,6 +163,7 @@ def api_login():
 # 안되어 있으면 'result'로 'fail'과 'msg' 값을 반환
 @app.route('/api/check', methods=['GET'])
 def api_valid():
+
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -173,22 +180,20 @@ def api_valid():
 # 리뷰 작성
 @app.route('/api/review', methods=['POST'])
 def review_post():
-    token_receive = request.cookies.get('mytoken')
-
+    cur_status, cur_user_id = token_request()
     comment_receive = request.form['comment_give']
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        doc = {
-            'post_id' : 1,
-            'user_id' : payload['id'],
-            'comment' : comment_receive,
-            'date' : datetime.now()
-        }
+    doc = {
+        'post_id': 1,
+        'user_id': cur_user_id,
+        'comment': comment_receive,
+        'date': datetime.now()
+    }
+    if cur_status == 1:
         db.reviews.insert_one(doc)
         return jsonify({'result': 'success'})
-    except jwt.ExpiredSignatureError:
+    elif cur_status == 2:
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
-    except jwt.exceptions.DecodeError:
+    else:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
 @app.route('/api/review', methods=['DELETE'])
@@ -231,7 +236,6 @@ def all_listing(type):
         posts = load_posts()
 
     return jsonify({'all_posts': posts})
-
 
 # 로그인 된 유저 id를 받음
 @app.route('/post/<type>/<int:user_id>', methods=['GET'])
@@ -309,4 +313,4 @@ def save_posting():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5001, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
