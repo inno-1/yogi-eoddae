@@ -44,6 +44,9 @@ def token_request():
 # [안웅기] HTML 페이지 렌더링
 @app.route('/')
 def home():
+
+    postList = list(db.posts.find({}, {"_id":False}))
+
     cur_status, cur_id = token_request()
 
     result = {'status': cur_status}
@@ -53,7 +56,7 @@ def home():
         result['posts'] = posts
         result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
 
-    return render_template('index.html', result=result)
+    return render_template('index.html', result=result, postList=postList)
 
 @app.route('/login')
 def login():
@@ -211,7 +214,6 @@ def all_listing(type):
         posts = load_posts()
 
     return jsonify({'all_posts': posts})
-
 
 # 로그인 된 유저 id를 받음
 @app.route('/post/<type>/<int:user_id>', methods=['GET'])
