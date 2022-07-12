@@ -303,7 +303,7 @@ def save_posting():
         'location': location_receive,
         'file': 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename,
         'view': 0,
-        'recommend': 0
+        'recommend': []
     }
 
     # [양명규] 입력한 주소를 x,y 좌표로 변환
