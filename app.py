@@ -258,6 +258,7 @@ def save_posting():
     # file.save(save_to)
 
     s3.put_object(
+        ACL="public-read",
         Bucket=BUCKET_NAME,
         Body=file,
         Key=filename,
