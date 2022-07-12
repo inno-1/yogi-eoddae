@@ -83,7 +83,38 @@
             transition-duration: 0.5s;
             color: gray;
         }
+
+        .custom-file {
+        }
     </style>
+    <script>
+        function posting() {
+            let title = $('#title').val()
+            let content = $('#content').val()
+            let location = $('#location').val()
+
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+            form_data.append("file_give", file)
+            form_data.append("title_give", title)
+            form_data.append("content_give", content)
+            form_data.append("location_give", location)
+
+            $.ajax({
+                type: "POST",
+                url: "/api/post",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            })
+        }
+    </script>
 
 </head>
 
@@ -96,20 +127,23 @@
         <div class="jumbotron jumbotron-fluid">
 
             <div class="posting-box">
-                <div class="container">
-                    <h3>작성자:</h3>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="title" placeholder="제목 입력">
                 </div>
-                <div class="custom-file" style="margin-bottom: 5px;">
+                <div class="custom-file" style="margin-bottom: 15px;">
                     <input type="file" class="custom-file-input" id="file">
-                    <label class="custom-file-label" for="file">선택된 파일 없음</label>
+                    <label class="custom-file-label" for="file">이미지 등록</label>
                 </div>
                 <div class="form-group">
-                        <textarea class="form-control" id="content"
-                                  placeholder="내용"></textarea>
+                    <input type="text" class="form-control" id="location" placeholder="주소 입력">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="content"
+                              placeholder="내용 입력"></textarea>
                 </div>
 
                 <div class="writebtn">
-                    <button>
+                    <button onclick="posting()">
                         저장하기
                     </button>
                     <button>
