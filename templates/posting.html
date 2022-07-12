@@ -1,50 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
 
+    <link href='{{ url_for("static", filename="css/reset.css") }}' rel="stylesheet">
+    <link href='{{ url_for("static", filename="css/common.css") }}' rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poor+Story&display=swap" rel="stylesheet">
 
     <title>포스팅 쓰기</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <link href='{{ url_for("static", filename="css/header.css") }}' rel="stylesheet">
+    <script type="text/javascript" src='{{ url_for("static", filename="js/header.js") }}'></script>
+    <script type="text/javascript" src='{{ url_for("static", filename="js/posting.js") }}'></script>
+
     <style>
-
-
-        .writewrap {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .jumbotron {
-            background-color: rgb(230, 25, 78);
-        }
-
-        .jumbotron-fluid {
-            padding-right: 110px;
-            padding-left: 110px;
-        }
-
-        .container > h3 {
-            margin-top: 10px;
-            margin-bottom: 10px;
+        .title {
+            font-size: 28px;
+            line-height: 36px;
+            font-weight: 700;
         }
 
         textarea.form-control {
@@ -87,73 +72,45 @@
         .custom-file {
         }
     </style>
-    <script>
-        function posting() {
-            let title = $('#title').val()
-            let content = $('#content').val()
-            let location = $('#location').val()
-
-            let file = $('#file')[0].files[0]
-            let form_data = new FormData()
-
-            form_data.append("file_give", file)
-            form_data.append("title_give", title)
-            form_data.append("content_give", content)
-            form_data.append("location_give", location)
-
-            $.ajax({
-                type: "POST",
-                url: "/api/post",
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alert(response["msg"])
-                    window.location.href = '/'
-                }
-            })
-        }
-    </script>
 
 </head>
 
 <body>
 
+{% include 'header.html' %}
 
-<div class="writewrap">
-    <div style="height:150px;"></div>
-    <div class="wrap" style=" max-width: 900px; margin: auto;">
-        <div class="jumbotron jumbotron-fluid">
+    <div class="container py-5">
+        <h1 class="mb-5 title">
+            포스트 작성
+        </h1>
+        <div class="posting-box">
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" class="form-control" id="title" placeholder="제목 입력">
+            </div>
+            <div class="custom-file" style="margin-bottom: 15px;">
+                <input type="text" class="custom-file-input" id="file-text">
+                <input type="file" id="file">
+                <label class="custom-file-label" for="file">이미지 등록</label>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="location" placeholder="주소 입력">
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" id="content"
+                          placeholder="내용 입력"></textarea>
+            </div>
 
-            <div class="posting-box">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="title" placeholder="제목 입력">
-                </div>
-                <div class="custom-file" style="margin-bottom: 15px;">
-                    <input type="file" class="custom-file-input" id="file">
-                    <label class="custom-file-label" for="file">이미지 등록</label>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="location" placeholder="주소 입력">
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" id="content"
-                              placeholder="내용 입력"></textarea>
-                </div>
-
-                <div class="writebtn">
-                    <button onclick="posting()">
-                        저장하기
-                    </button>
-                    <button onclick= "window.location.href = '/'">
-                        돌아가기
-                    </button>
-                </div>
+            <div class="writebtn">
+                <button onclick="posting()">
+                    저장하기
+                </button>
+                <button onclick= "window.location.href = '/'">
+                    돌아가기
+                </button>
             </div>
         </div>
     </div>
-</div>
 
 
 </body>
