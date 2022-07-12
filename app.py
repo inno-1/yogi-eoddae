@@ -270,6 +270,7 @@ def save_posting():
     # file.save(save_to)
 
     s3.put_object(
+        ACL="public-read",
         Bucket=BUCKET_NAME,
         Body=file,
         Key=filename,
@@ -283,13 +284,16 @@ def save_posting():
     count = len(post_list) + 1
 
     doc = {
-        'post_id': count,
+        'id': count,
         'title': title_receive,
         'date': datetime.now(),
         'user_id': payload['id'],
         'content': content_receive,
         'location': location_receive,
-        'file': 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename
+        'file': 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename,
+        'view': 0,
+        'recommand': 0
+
     }
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
