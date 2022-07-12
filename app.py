@@ -211,6 +211,7 @@ def s3_connection():
 
 s3 = s3_connection()
 
+# 포스팅
 @app.route('/api/post', methods=['POST'])
 def save_posting():
     title_receive = request.form['title_give']
