@@ -183,6 +183,20 @@ def review_delete():
     else:
         return jsonify({'result': 'fail', 'msg' : '실패쓰'})
 
+# 댓글 수
+@app.route('/api/review', methods=['PUT'])
+def review_edit():
+
+    id_receive = request.form['id_give']
+    comment_receive = request.form['comment_give']
+    review = list(db.reviews.find_one({'_id': ObjectId(id_receive)}))
+    if review:
+        db.reviews.update_one({'_id': ObjectId(id_receive)}, {'$set': {'comment': comment_receive}})
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'fail', 'msg': '실패쓰'})
+
+
 def load_posts(type = 'all'):
     if type == 'all':
         return list(db.posts.find({}, {'_id': False}))  # 정렬 없음
@@ -263,6 +277,7 @@ def save_posting():
     }
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)

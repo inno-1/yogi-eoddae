@@ -61,10 +61,12 @@
                 })
             }
 
-            $('#userid, #userpw').on('keyup', function (e) {
-                if(e.which === '13') {
-                    login();
-                }
+            $(document).ready(function () {
+                $('#userid, #userpw').on('keyup', function (e) {
+                    if (e.which === 13) {
+                        login();
+                    }
+                })
             })
 
         </script>
