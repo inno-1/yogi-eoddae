@@ -15,6 +15,21 @@
     align-items: center;
     justify-content: center;
 }
+
+.top-bar > h1 {
+    margin-bottom: 0;
+}
+
+.top-bar > h1 > a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.top-bar > h1 > a:link {
+    text-decoration: none;
+    color: inherit;
+}
+
 body {
     background-position: center;
     background-size: cover;
