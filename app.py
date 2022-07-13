@@ -91,10 +91,14 @@ def posting():
 def detail(post_id):
     token_receive = request.cookies.get('mytoken')
     cur_status, cur_user_id = token_request()
-
+    recommend_status = True
     post = db.posts.find_one({'_id': ObjectId(post_id)})
     post['recommend_count'] = len(post['recommend'])
-    result = {'status': cur_status, 'user_id': cur_user_id}
+    for recommend_id in post['recommend']:
+        if recommend_id == cur_user_id:
+            recommend_status = False
+
+    result = {'status': cur_status, 'user_id': cur_user_id, 'recommend_status' : recommend_status}
     review_list = list(db.reviews.find({'post_id': ObjectId(post_id)}))
     for review in review_list:
         review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
@@ -197,6 +201,23 @@ def post_recommend():
     else:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
+# [안웅기] 추천해제
+@app.route('/api/post-recommend', methods=['DELETE'])
+def post_unrecommend():
+    cur_status, cur_user_id = token_request()
+    id_receive = request.form['id_give']
+    result = db.posts.find_one({'_id': ObjectId(id_receive)})
+
+    if cur_status == 1:
+        if cur_user_id in result['recommend']:
+            db.posts.update_one({'_id': ObjectId(id_receive)}, {'$pull': {'recommend': cur_user_id}})
+            return jsonify({'result': 'success'})
+        else:
+            return jsonify({'result': 'fail', 'msg': '이미 추천하셨습니다.'})
+    elif cur_status == 2:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    else:
+        return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
 # [안웅기] 리뷰 API
 # 목록 조회는 페이지 오픈 시에! -> jinja2로
