@@ -7,3 +7,56 @@
     width: 100%;
     height: 100%;
 }
+
+.map_container {
+    position: relative;
+}
+
+.intro_wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: var(--point-color);
+    transition: .8s;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intro_wrap.hide {
+    opacity: 0;
+    z-index: -100;
+}
+
+.intro_wrap > .intro_con > span {
+    display: inline-block;
+    font-family: "yg-jalnan";
+    font-size: 30px;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.intro_wrap.show > .intro_con > span {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.intro_wrap.show > .intro_con > span:first-child {
+    transition: 0.7s 0.2s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+}
+
+.intro_wrap.show > .intro_con > span:nth-child(2) {
+    transition: 0.7s 0.35s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+}
+
+.intro_wrap.show > .intro_con > span:nth-child(3) {
+    transition: 0.7s 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+}
+
+.intro_wrap.show > .intro_con > span:last-child {
+    transition: 0.7s 0.65s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+}
