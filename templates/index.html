@@ -4,6 +4,7 @@
 
     {% include 'common_head.html' %}
     <link href='{{ url_for("static", filename="css/header.css") }}' rel="stylesheet">
+    <link href='{{ url_for("static", filename="css/footer.css") }}' rel="stylesheet">
     <link href='{{ url_for("static", filename="css/main.css") }}' rel="stylesheet">
     <script type="text/javascript" src='{{ url_for("static", filename="js/header.js") }}'></script>
     <script type="text/javascript" src='{{ url_for("static", filename="js/index.js") }}'></script>
@@ -86,6 +87,8 @@
         </div>
     </div>
 </main>
+
+{% include 'footer.html' %}
 
 </body>
 

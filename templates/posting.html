@@ -9,6 +9,7 @@
     <title>포스팅 {% if mode == 'edit' %}수정{% else %}작성{% endif %} | 요기어때</title>
 
     <link href='{{ url_for("static", filename="css/header.css") }}' rel="stylesheet">
+    <link href='{{ url_for("static", filename="css/footer.css") }}' rel="stylesheet">
     <script type="text/javascript" src='{{ url_for("static", filename="js/header.js") }}'></script>
     <script type="text/javascript" src='{{ url_for("static", filename="js/posting.js") }}'></script>
 
@@ -108,6 +109,8 @@
             </div>
         </div>
     </div>
+
+{% include 'footer.html' %}
 
 
 </body>

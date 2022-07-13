@@ -1,0 +1,15 @@
+/* 헤더 */
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.footer_logo {
+    width: 50px;
+}
+
+.footer_title {
+    font-family: yg-jalnan;
+}
