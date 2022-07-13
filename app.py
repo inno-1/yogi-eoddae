@@ -84,7 +84,6 @@ def detail(post_id):
 
     post = db.posts.find_one({'_id' : ObjectId(post_id)})
     post['recommend_count'] = len(post['recommend'])
-    print(post)
     result = {'status': cur_status, 'user_id': cur_user_id}
     review_list = list(db.reviews.find({'post_id': ObjectId(post_id)}))
     for review in review_list:
@@ -325,6 +324,17 @@ def save_posting():
 
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
+
+@app.route('/api/post', methods=['DELETE'])
+def post_delete():
+
+    id_receive = request.form['id_give']
+    post = list(db.posts.find_one({'_id':ObjectId(id_receive)}))
+    if post:
+        db.posts.delete_one({'_id': ObjectId(id_receive)})
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'fail', 'msg':'삭제에 실패하였습니다.'})
 
 
 if __name__ == '__main__':
