@@ -344,19 +344,25 @@ def save_posting():
     response = r.json()
 
     status = True
+    fail_msg = '올바른 주소를 입력해주세요.'
     if response["status"] == "OK":
         if len(response["addresses"]) > 0:
-            print(response)
-            x = float(response["addresses"][0]["x"])
-            y = float(response["addresses"][0]["y"])
-            doc['point'] = {'x': x, 'y': y}
+            # 동작구 우편번호 범위 06900 ~ 07074
+            postal_code = int(response["addresses"][0]["addressElements"][-1]['longName'])
+            if postal_code >= 7074 or postal_code < 6900 :
+                status = False
+                fail_msg = '동작구에 해당하는 주소를 입력해주세요.'
+            else:
+                x = float(response["addresses"][0]["x"])
+                y = float(response["addresses"][0]["y"])
+                doc['point'] = {'x': x, 'y': y}
         else:
             status = False
     else:
         status = False
 
     if status is False:
-        return jsonify({'result': 'fail', 'msg': '올바른 주소를 입력해주세요.'})
+        return jsonify({'result': 'fail', 'msg': fail_msg})
     else:
         db.posts.insert_one(doc)
         return jsonify({'result': 'success','msg': '저장 완료!'})
@@ -402,16 +408,50 @@ def post_edit():
         file = request.form['file_give']
         origin_file_name = request.form['file_name_give']
 
+    # [양명규] 입력한 주소를 x,y 좌표로 변환
+    headers = {
+        "X-NCP-APIGW-API-KEY-ID": MAP_CLIENT_ID,
+        "X-NCP-APIGW-API-KEY": MAP_CLIENT_SECRET_KEY
+    }
+
+    r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={location_receive}",
+                     headers=headers)
+    response = r.json()
+
+    status = True
+    fail_msg = '수정에 실패하였습니다.'
+    if response["status"] == "OK":
+        if len(response["addresses"]) > 0:
+            # 동작구 우편번호 범위 06900 ~ 07074
+            postal_code = int(response["addresses"][0]["addressElements"][-1]['longName'])
+            if postal_code >= 7074 or postal_code < 6900:
+                status = False
+                fail_msg = '동작구에 해당하는 주소를 입력해주세요.'
+            else:
+                x = float(response["addresses"][0]["x"])
+                y = float(response["addresses"][0]["y"])
+                point = {'x': x, 'y': y}
+        else:
+            status = False
+            fail_msg = '올바른 주소를 입력해주세요.'
+    else:
+        status = False
+        fail_msg = '올바른 주소를 입력해주세요.'
+
     post = db.posts.find_one({'_id': ObjectId(id_receive)})
-    if post:
+    if post is None:
+        status = False
+
+    if status is False:
+        return jsonify({'result':'fail', 'msg': fail_msg})
+    else:
         db.posts.update_one(
             {'_id': ObjectId(id_receive)},
             {'$set': {
-                'title': title_receive, 'location': location_receive, 'content': content_receive, 'file': file, 'origin_file_name': origin_file_name}
+                'title': title_receive, 'location': location_receive, 'content': content_receive, 'file': file,
+                'origin_file_name': origin_file_name, 'point': point}
             })
         return jsonify({'result': 'success'})
-    else:
-        return jsonify({'result':'fail', 'msg':'수정에 실패하였습니다.'})
 
 
 if __name__ == '__main__':
