@@ -108,6 +108,10 @@ function review_edit_cancel(id){
 function review_edit(id){
     let edit_comment = '#reviewTxtArea-' + id;
     let comment = $(edit_comment).val()
+    if(comment == ''){
+        alert('빈칸입니다!');
+        return;
+    }
     $.ajax({
         type: "PUT",
         url: "/api/review",
