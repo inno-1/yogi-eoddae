@@ -27,6 +27,9 @@ MAP_CLIENT_SECRET_KEY = '7Jpoj7foQyXXfDXEdUSxlCM2wd9LG5d5WQHbv24k'
 # [양명규] 포스트 정렬 타입 리스트 정의
 SORT_TYPE = ['date', 'view', 'recommend']
 
+# [양명규] 이미지 저장 서버 주소
+AWS_BUCKET_PATH = 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/'
+
 
 # [안웅기] 토큰 리퀘스트 요청한 클라이언트의 토큰을 반환
 # 첫번째 반환값 int : 1 - 로그인 상태, 2 - 로그인 기한 만료, 3 - 로그인 하지 않은 상태
@@ -98,6 +101,15 @@ def detail(post_id):
         review['_id'] = str(review['_id'])
 
     return render_template('detail.html', reviews=review_list, result=result, post=post)
+
+@app.route('/detail/<post_id>/edit')
+def edit(post_id):
+    cur_status, cur_user_id = token_request()
+
+    post = db.posts.find_one({'_id': ObjectId(post_id)})
+    result = {'status': cur_status, 'user_id': cur_user_id, 'post': post}
+
+    return render_template('posting.html', mode='edit', result=result)
 
 
 # [안웅기] 로그인을 위한 API
@@ -311,9 +323,6 @@ def save_posting():
 
         filename = f'post id-{mytime}.{extension}'
 
-        # save_to = f'static/img/{filename}.{extension}'
-        # file.save(save_to)
-
         s3.put_object(
             ACL="public-read",
             Bucket=BUCKET_NAME,
@@ -321,7 +330,8 @@ def save_posting():
             Key=filename,
             ContentType=file.content_type)
 
-        doc['file'] = 'https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/' + filename
+        doc['file'] = AWS_BUCKET_PATH + filename
+        doc['origin_file_name'] = file.filename
 
     # [양명규] 입력한 주소를 x,y 좌표로 변환
     headers = {
@@ -359,14 +369,36 @@ def post_edit():
     title_receive = request.form['title_give']
     location_receive = request.form['location_give']
     content_receive = request.form['content_give']
-    file_receive = request.form['file_give']
 
-    post = db.posts.update_one({'_id': ObjectId(id_receive)})
+    if len(request.files) > 0:
+        file_receive = request.files['file_give']
+
+        extension = file_receive.filename.split('.')[-1]
+
+        today = datetime.now()
+        mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+
+        filename = f'post id-{mytime}.{extension}'
+
+        s3.put_object(
+            ACL="public-read",
+            Bucket=BUCKET_NAME,
+            Body=file_receive,
+            Key=filename,
+            ContentType=file_receive.content_type)
+
+        file = AWS_BUCKET_PATH + filename
+        origin_file_name = file_receive.filename
+    else:
+        file = request.form['file_give']
+        origin_file_name = request.form['file_name_give']
+
+    post = db.posts.find_one({'_id': ObjectId(id_receive)})
     if post:
         db.posts.update_one(
             {'_id': ObjectId(id_receive)},
             {'$set': {
-                'title': title_receive, 'location': location_receive, 'content': content_receive, 'file': file_receive}
+                'title': title_receive, 'location': location_receive, 'content': content_receive, 'file': file, 'origin_file_name': origin_file_name}
             })
         return jsonify({'result': 'success'})
     else:

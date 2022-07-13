@@ -120,23 +120,3 @@ function post_delete(id){
         }
     })
 }
-
-function post_edit(id){
-    let title = $('#title').val()
-    let location = $('#location').val()
-    let content = $('#content').val()
-    let file = $('#file').val()
-    $.ajax({
-        type: "PUT",
-        url: "/api/post",
-        data: {id_give: id, title_give: title, location_give: location, content_give: content, file_give: file},
-        success: function (response) {
-            if (response['result'] == 'success') {
-                window.location.href = '/posting';
-            } else {
-                // 로그인이 안되면 에러메시지를 띄웁니다.
-                alert(response['msg'])
-            }
-        }
-    })
-}

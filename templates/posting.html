@@ -6,7 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poor+Story&display=swap" rel="stylesheet">
 
-    <title>포스팅 작성 | 요기어때</title>
+    <title>포스팅 {% if mode == 'edit' %}수정{% else %}작성{% endif %} | 요기어때</title>
 
     <link href='{{ url_for("static", filename="css/header.css") }}' rel="stylesheet">
     <script type="text/javascript" src='{{ url_for("static", filename="js/header.js") }}'></script>
@@ -39,7 +39,7 @@
 
         .form-group.file input {
             flex: initial;
-            width: calc(100% - 186px);
+            width: calc(100% - 275px);
         }
 
         .form-group input[type=file] {
@@ -66,32 +66,42 @@
 
     <div class="container py-5">
         <h1 class="mb-5 title">
-            포스트 작성
+            포스팅 {% if mode == 'edit' %}수정{% else %}작성{% endif %}
         </h1>
         <div class="posting-box">
             <div class="form-group mb-3">
                 <label class="form-label" for="title">제목</label>
-                <input type="text" class="form-control" id="title" placeholder="제목 입력">
+                <input type="text" class="form-control" id="title" value="{% if mode == 'edit' %}{{result.post.title}}{% endif %}" placeholder="제목 입력">
             </div>
             <div class="form-group file mb-3">
                 <span class="form-label">이미지</span>
-                <input type="text" class="custom-file-input" id="file-text" placeholder="이미지 등록" readonly>
+                <input type="text" class="custom-file-input" id="file-text" value="{% if mode == 'edit' %}{{result.post.origin_file_name}}{% endif %}" placeholder="이미지 등록" readonly>
                 <input type="file" id="file" accept="image/*">
-                <label class="btn btn-point" for="file">파일 첨부</label>
+                <label class="btn btn-point me-1" for="file">파일 첨부</label>
+                <a href="javascript:void(0)" id="file_delete_btn" class="btn btn-point">파일 삭제</a>
+                {% if mode == 'edit' %}
+                    <input type="hidden" id="file_tmp" value="{{result.post.file}}"/>
+                {% endif %}
             </div>
             <div class="form-group mb-3">
                 <label class="form-label" for="location">주소</label>
-                <input type="text" class="form-control" id="location" placeholder="주소 입력">
+                <input type="text" class="form-control" id="location" value="{% if mode == 'edit' %}{{result.post.location}}{% endif %}" placeholder="주소 입력">
             </div>
             <div class="form-group mb-5">
                 <label class="form-label" for="content">내용</label>
-                <textarea class="form-control" id="content" placeholder="내용 입력"></textarea>
+                <textarea class="form-control" id="content" placeholder="내용 입력">{% if mode == 'edit' %}{{result.post.content}}{% endif %}</textarea>
             </div>
 
             <div class="d-flex align-item-center justify-content-center">
-                <button onclick="posting()" class="btn btn-point me-2">
-                    저장하기
-                </button>
+                {% if mode == 'edit' %}
+                    <button onclick="post_edit('{{ result.post._id | string }}')" class="btn btn-point me-2">
+                        수정하기
+                    </button>
+                {% else %}
+                    <button onclick="posting()" class="btn btn-point me-2">
+                        저장하기
+                    </button>
+                {% endif %}
                 <button onclick= "window.location.href = '/'" class="btn btn-point">
                     돌아가기
                 </button>

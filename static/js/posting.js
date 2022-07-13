@@ -1,10 +1,4 @@
-function posting() {
-    let title = $('#title').val()
-    let content = $('#content').val()
-    let location = $('#location').val()
-
-    let file = $('#file')[0].files[0]
-    let form_data = new FormData()
+function valid_check(title, location, content) {
 
     if(title === '') {
         alert('제목을 입력해주세요.');
@@ -23,6 +17,17 @@ function posting() {
         $('#content').focus();
         return false;
     }
+}
+
+function posting() {
+    let title = $('#title').val();
+    let content = $('#content').val();
+    let location = $('#location').val();
+
+    let file = $('#file')[0].files[0];
+    let form_data = new FormData();
+
+    valid_check(title,location,content);
 
     if(file) {
         form_data.append("file_give", file);
@@ -30,9 +35,9 @@ function posting() {
         form_data.append("file_give", null);
     }
 
-    form_data.append("title_give", title)
-    form_data.append("content_give", content)
-    form_data.append("location_give", location)
+    form_data.append("title_give", title);
+    form_data.append("content_give", content);
+    form_data.append("location_give", location);
 
     $.ajax({
         type: "POST",
@@ -48,6 +53,52 @@ function posting() {
     })
 }
 
+function post_edit(id){
+    let title = $('#title').val();
+    let content = $('#content').val();
+    let location = $('#location').val();
+
+    let file = $('#file')[0].files[0];
+    let form_data = new FormData();
+
+    valid_check(title,location,content);
+
+    if(file) {
+        form_data.append("file_give", file);
+    } else {
+        if($('#file_tmp').val() === "") {
+            form_data.append("file_give", "");
+            form_data.append("file_name_give", "");
+        }
+        else {
+            form_data.append("file_give", $('#file_tmp').val());
+            form_data.append("file_name_give", $('#file-text').val());
+        }
+    }
+
+    form_data.append("id_give", id);
+    form_data.append("title_give", title);
+    form_data.append("content_give", content);
+    form_data.append("location_give", location);
+
+    $.ajax({
+        type: "PUT",
+        url: "/api/post",
+        data: form_data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response['result'] == 'success') {
+                window.location.href = `/detail/${id}`;
+            } else {
+                // 로그인이 안되면 에러메시지를 띄웁니다.
+                alert(response['msg'])
+            }
+        }
+    })
+}
+
 $(document).ready(function () {
     $('#file').on('change', function (e) {
         if(this.files[0]) {
@@ -55,6 +106,11 @@ $(document).ready(function () {
         } else {
             $('#file-text').val("");
         }
+    })
 
+    $('#file_delete_btn').on('click', function () {
+        $('#file').val("");
+        $('#file_tmp').val("")
+        $('#file-text').val("");
     })
 })
