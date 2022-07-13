@@ -47,8 +47,12 @@ function posting() {
         contentType: false,
         processData: false,
         success: function (response) {
-            alert(response["msg"])
-            window.location.href = '/'
+            if(response['result'] === 'success') {
+                alert(response["msg"]);
+                window.location.href = '/'
+            } else {
+                alert(response["msg"]);
+            }
         }
     })
 }
