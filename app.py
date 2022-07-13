@@ -383,7 +383,7 @@ def save_posting():
     status = True
     fail_msg = '올바른 주소를 입력해주세요.'
     if response["status"] == "OK":
-        if len(response["addresses"]) > 0:
+        if len(response["addresses"]) > 0 and response["addresses"][0]["addressElements"][-1]['longName'] != '':
             # 동작구 우편번호 범위 06900 ~ 07074
             postal_code = int(response["addresses"][0]["addressElements"][-1]['longName'])
             if postal_code >= 7074 or postal_code < 6900 :
@@ -458,7 +458,7 @@ def post_edit():
     status = True
     fail_msg = '수정에 실패하였습니다.'
     if response["status"] == "OK":
-        if len(response["addresses"]) > 0 and response["addresses"][0]["addressElements"][-1]['longName'] is not '':
+        if len(response["addresses"]) > 0 and response["addresses"][0]["addressElements"][-1]['longName'] != '':
             # 동작구 우편번호 범위 06900 ~ 07074
             postal_code = int(response["addresses"][0]["addressElements"][-1]['longName'])
             if postal_code >= 7074 or postal_code < 6900:
