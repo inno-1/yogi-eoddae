@@ -8,11 +8,13 @@ from datetime import datetime, timedelta
 import certifi
 import jwt
 import hashlib
+
 app = Flask(__name__)
 
 # [안웅기] 개인적인 맥 로컬 환경에 DB 접속 오류로 인한 추가
 ca = certifi.where()
-client = MongoClient('mongodb+srv://team5:sparta@cluster0.odclv.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
+client = MongoClient('mongodb+srv://team5:sparta@cluster0.odclv.mongodb.net/Cluster0?retryWrites=true&w=majority',
+                     tlsCAFile=ca)
 db = client['yogi-eoddae']
 
 # [안웅기 ]JWT 토큰을 만들 때 필요한 문자열.
@@ -24,6 +26,7 @@ MAP_CLIENT_SECRET_KEY = '7Jpoj7foQyXXfDXEdUSxlCM2wd9LG5d5WQHbv24k'
 
 # [양명규] 포스트 정렬 타입 리스트 정의
 SORT_TYPE = ['date', 'view', 'recommend']
+
 
 # [안웅기] 토큰 리퀘스트 요청한 클라이언트의 토큰을 반환
 # 첫번째 반환값 int : 1 - 로그인 상태, 2 - 로그인 기한 만료, 3 - 로그인 하지 않은 상태
@@ -43,6 +46,7 @@ def token_request():
 
     return cur_status, cur_id
 
+
 # [안웅기] HTML 페이지 렌더링
 @app.route('/')
 def home():
@@ -61,6 +65,7 @@ def home():
 
     return render_template('index.html', result=result)
 
+
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
@@ -71,18 +76,20 @@ def login():
 def register():
     return render_template('register.html')
 
+
 @app.route('/posting')
 def posting():
     cur_status, cur_user_id = token_request()
     result = {'status': cur_status}
     return render_template('posting.html', result=result)
 
+
 @app.route('/detail/<post_id>')
 def detail(post_id):
     token_receive = request.cookies.get('mytoken')
     cur_status, cur_user_id = token_request()
 
-    post = db.posts.find_one({'_id' : ObjectId(post_id)})
+    post = db.posts.find_one({'_id': ObjectId(post_id)})
     post['recommend_count'] = len(post['recommend'])
     result = {'status': cur_status, 'user_id': cur_user_id}
     review_list = list(db.reviews.find({'post_id': ObjectId(post_id)}))
@@ -91,6 +98,7 @@ def detail(post_id):
         review['_id'] = str(review['_id'])
 
     return render_template('detail.html', reviews=review_list, result=result, post=post)
+
 
 # [안웅기] 로그인을 위한 API
 
@@ -107,6 +115,7 @@ def api_register():
 
     return jsonify({'result': 'success'})
 
+
 # [안웅기] 아이디 중복확인
 @app.route('/api/register/check-dup', methods=['POST'])
 def check_dup():
@@ -117,7 +126,6 @@ def check_dup():
         return jsonify({'result': 'exist'})
     else:
         return jsonify({'result': 'success'})
-
 
 
 # [안웅기] 로그인 API
@@ -143,12 +151,12 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
+
 # [안웅기] 현재 로그인 상태 valid 체크
 # 로그인이 되어있으면 'result'로 'success'와 'id' 값을 반환
 # 안되어 있으면 'result'로 'fail'과 'msg' 값을 반환
 @app.route('/api/check', methods=['GET'])
 def api_valid():
-
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -157,6 +165,7 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
+
 
 # [안웅기] 추천하기
 @app.route('/api/post-recommend', methods=['POST'])
@@ -169,12 +178,14 @@ def post_recommend():
         if cur_user_id in result['recommend']:
             return jsonify({'result': 'fail', 'msg': '이미 추천하셨습니다.'})
         else:
-            db.posts.update_one({'_id': ObjectId(id_receive)}, {'$push': { 'recommend' : cur_user_id}})
+            db.posts.update_one({'_id': ObjectId(id_receive)}, {'$push': {'recommend': cur_user_id}})
             return jsonify({'result': 'success'})
     elif cur_status == 2:
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     else:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
+
+
 # [안웅기] 리뷰 API
 # 목록 조회는 페이지 오픈 시에! -> jinja2로
 
@@ -198,21 +209,21 @@ def review_post():
     else:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
+
 @app.route('/api/review', methods=['DELETE'])
 def review_delete():
-
     id_receive = request.form['id_give']
-    review = list(db.reviews.find_one({'_id' : ObjectId(id_receive)}))
+    review = list(db.reviews.find_one({'_id': ObjectId(id_receive)}))
     if review:
-        db.reviews.delete_one({'_id' : ObjectId(id_receive)})
+        db.reviews.delete_one({'_id': ObjectId(id_receive)})
         return jsonify({'result': 'success'})
     else:
-        return jsonify({'result': 'fail', 'msg' : '실패쓰'})
+        return jsonify({'result': 'fail', 'msg': '실패쓰'})
+
 
 # 댓글 수정
 @app.route('/api/review', methods=['PUT'])
 def review_edit():
-
     id_receive = request.form['id_give']
     comment_receive = request.form['comment_give']
     review = list(db.reviews.find_one({'_id': ObjectId(id_receive)}))
@@ -223,11 +234,12 @@ def review_edit():
         return jsonify({'result': 'fail', 'msg': '실패쓰'})
 
 
-def load_posts(type = 'all'):
+def load_posts(type='all'):
     if type == 'all':
         return list(db.posts.find({}, {'_id': False}))  # 정렬 없음
     else:
         return list(db.posts.find({}, {'_id': False}).sort(type, pymongo.DESCENDING))  # 최신순
+
 
 # 타입을 파라미터로 받음 -> date, view, recommend
 @app.route('/post/<type>', methods=['GET'])
@@ -239,31 +251,35 @@ def all_listing(type):
 
     return jsonify({'all_posts': posts})
 
+
 # 로그인 된 유저 id를 받음
 @app.route('/post/<type>/<int:user_id>', methods=['GET'])
 def my_listing(type, user_id):
     if type == 'date':
-        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('date', pymongo.DESCENDING))    # 최신순
+        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('date', pymongo.DESCENDING))  # 최신순
     elif type == 'view':
-        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('view', pymongo.DESCENDING))    # 조회수 순
+        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('view', pymongo.DESCENDING))  # 조회수 순
     elif type == 'recommend':
-        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('recommend', pymongo.DESCENDING))   # 추천수 순
+        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('recommend', pymongo.DESCENDING))  # 추천수 순
     else:
         post = list(db.posts.find({'user_id': user_id}, {'_id': False}))  # 정렬 없음
     return jsonify({'all_posts': post})
 
 
-ACCESS_KEY_ID = 'AKIAXX6AEBP75R7DMAON'      # 액세스 키 (효원 문의)
+ACCESS_KEY_ID = 'AKIAXX6AEBP75R7DMAON'  # 액세스 키 (효원 문의)
 ACCESS_SECRET_KEY = 'hEaHB+f8yJY7003yn2nT0znN+6/5hnnndvMUh0+p'
 BUCKET_NAME = 'yogi-eoddae-bucket'
 
+
 def s3_connection():
     s3 = boto3.client('s3',
-        aws_access_key_id=ACCESS_KEY_ID,
-        aws_secret_access_key=ACCESS_SECRET_KEY)
+                      aws_access_key_id=ACCESS_KEY_ID,
+                      aws_secret_access_key=ACCESS_SECRET_KEY)
     return s3
 
+
 s3 = s3_connection()
+
 
 # 포스팅
 @app.route('/api/post', methods=['POST'])
@@ -286,7 +302,7 @@ def save_posting():
     }
 
     # 파일 첨부했을때만 추가
-    if len(request.files) > 0 :
+    if len(request.files) > 0:
         file = request.files['file_give']
         extension = file.filename.split('.')[-1]
 
@@ -313,7 +329,8 @@ def save_posting():
         "X-NCP-APIGW-API-KEY": MAP_CLIENT_SECRET_KEY
     }
 
-    r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={location_receive}", headers=headers)
+    r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={location_receive}",
+                     headers=headers)
     response = r.json()
 
     if response["status"] == "OK":
@@ -325,16 +342,35 @@ def save_posting():
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
 
+
 @app.route('/api/post', methods=['DELETE'])
 def post_delete():
-
     id_receive = request.form['id_give']
-    post = list(db.posts.find_one({'_id':ObjectId(id_receive)}))
+    post = list(db.posts.find_one({'_id': ObjectId(id_receive)}))
     if post:
         db.posts.delete_one({'_id': ObjectId(id_receive)})
-        return jsonify({'result':'success'})
+        return jsonify({'result': 'success'})
     else:
-        return jsonify({'result':'fail', 'msg':'삭제에 실패하였습니다.'})
+        return jsonify({'result': 'fail', 'msg': '삭제에 실패하였습니다.'})
+
+@app.route('/api/post', methods=['PUT'])
+def post_edit():
+    id_receive = request.form['id_give']
+    title_receive = request.form['title_give']
+    location_receive = request.form['location_give']
+    content_receive = request.form['content_give']
+    file_receive = request.form['file_give']
+
+    post = db.posts.update_one({'_id': ObjectId(id_receive)})
+    if post:
+        db.posts.update_one(
+            {'_id': ObjectId(id_receive)},
+            {'$set': {
+                'title': title_receive, 'location': location_receive, 'content': content_receive, 'file': file_receive}
+            })
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result':'fail', 'msg':'수정에 실패하였습니다.'})
 
 
 if __name__ == '__main__':
