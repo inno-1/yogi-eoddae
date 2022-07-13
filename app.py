@@ -316,14 +316,23 @@ def save_posting():
     r = requests.get(f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={location_receive}", headers=headers)
     response = r.json()
 
+    status = True
     if response["status"] == "OK":
         if len(response["addresses"]) > 0:
+            print(response)
             x = float(response["addresses"][0]["x"])
             y = float(response["addresses"][0]["y"])
             doc['point'] = {'x': x, 'y': y}
+        else:
+            status = False
+    else:
+        status = False
 
-    db.posts.insert_one(doc)
-    return jsonify({'msg': '저장 완료!'})
+    if status is False:
+        return jsonify({'result': 'fail', 'msg': '올바른 주소를 입력해주세요.'})
+    else:
+        db.posts.insert_one(doc)
+        return jsonify({'result': 'success','msg': '저장 완료!'})
 
 @app.route('/api/post', methods=['DELETE'])
 def post_delete():
