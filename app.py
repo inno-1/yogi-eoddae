@@ -219,6 +219,22 @@ def post_unrecommend():
     else:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
+# [안웅기] 뷰 수 추
+@app.route('/api/post-view', methods=['POST'])
+def post_view():
+    cur_status, cur_user_id = token_request()
+    id_receive = request.form['id_give']
+    result = db.posts.find_one({'_id': ObjectId(id_receive)})
+
+    if cur_status == 1:
+
+        db.posts.update_one({'_id': ObjectId(id_receive)}, {'$set': {'view': result['view'] + 1}})
+        return jsonify({'result': 'success'})
+    elif cur_status == 2:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
+    else:
+        return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
+
 # [안웅기] 리뷰 API
 # 목록 조회는 페이지 오픈 시에! -> jinja2로
 
