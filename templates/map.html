@@ -7,6 +7,42 @@
     .iw-inner {
         padding: 10px;
     }
+
+    .iw-inner > h5 {
+        font-family: "yg-jalnan";
+        font-size: 16px;
+    }
+
+    .iw-inner > .addr {
+        font-size: 13px;
+        line-height: 19px;
+        font-weight: 400;
+        margin-bottom: 5px;
+    }
+
+    .iw-inner .iw-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .iw-inner .iw-bottom > .recommend {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 400;
+        margin-bottom: 5px;
+    }
+
+    .iw-inner .iw-bottom > a {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 400;
+        color: gray;
+        background-color: #fff;
+        border: 1px solid gray;
+        padding: 3px 5px;
+        text-decoration: none;
+    }
 </style>
 
 <script type="text/javascript"
@@ -19,9 +55,9 @@
 
     $(document).ready(function () {
 
-        // 초기 지도 위치 동작구 가운데 쯤인 상도역 좌표로 지정
-        const y_cen = 37.503072;
-        const x_cen = 126.947753;
+        // 초기 지도 위치 가운데 쯤 좌표로 지정
+        const y_cen = 37.496962;
+        const x_cen = 126.947005;
 
         map = new naver.maps.Map('map', {
             center: new naver.maps.LatLng(y_cen, x_cen),
@@ -31,6 +67,39 @@
                 style: naver.maps.ZoomControlStyle.SMALL,
                 position: naver.maps.Position.TOP_RIGHT
             }
+        });
+
+       let polyline = new naver.maps.Polyline({
+            map: map,
+            path: [
+                new naver.maps.LatLng(37.515428, 126.927298),
+                new naver.maps.LatLng(37.512679, 126.926662),
+                new naver.maps.LatLng(37.512615, 126.925358),
+                new naver.maps.LatLng(37.498049, 126.920026),
+                new naver.maps.LatLng(37.496268, 126.912249),
+                new naver.maps.LatLng(37.484944, 126.903108),
+                new naver.maps.LatLng(37.484594, 126.906395),
+                new naver.maps.LatLng(37.489938, 126.916578),
+                new naver.maps.LatLng(37.489906, 126.924235),
+                new naver.maps.LatLng(37.494837, 126.927803),
+                new naver.maps.LatLng(37.492737, 126.932654),
+                new naver.maps.LatLng(37.494042, 126.945964),
+                new naver.maps.LatLng(37.490606, 126.954343),
+                new naver.maps.LatLng(37.493501, 126.960757),
+                new naver.maps.LatLng(37.484149, 126.961238),
+                new naver.maps.LatLng(37.475409, 126.970810),
+                new naver.maps.LatLng(37.476438, 126.981702),
+                new naver.maps.LatLng(37.497112, 126.982888),
+                new naver.maps.LatLng(37.499533, 126.985499),
+                new naver.maps.LatLng(37.503369, 126.980050),
+                new naver.maps.LatLng(37.506674, 126.980685),
+                new naver.maps.LatLng(37.517825, 126.947947),
+                new naver.maps.LatLng(37.515428, 126.927298)
+            ],
+           strokeColor: '#e61950',
+           strokeStyle: 'longdash',
+           strokeOpacity: 0.7,
+           strokeWeight: 3
         });
 
         let posts = {{ result.posts | tojson | safe }};
@@ -55,8 +124,12 @@
 
     function add_info(marker, data) {
         let html_temp = `<div class="iw-inner">
-                        <h5>${data['title']}</h5>
-                        <p>${data['location']}
+                            <h5>${data['title']}</h5>
+                            <p class="addr">주소 : ${data['location']}</p>
+                            <div class="iw-bottom">
+                                <p class="recommend">추천수 : ${data['recommend'].length}</p>
+                                <a href="/detail/${data['_id']}">상세보기</a>
+                            </div>
                         </div>`;
         let infowindow = new naver.maps.InfoWindow({
             content: html_temp,
@@ -64,7 +137,7 @@
             backgroundColor: "#fff",
             borderColor: "#e61950",
             borderWidth: 2,
-            anchorSize: new naver.maps.Size(15, 15),
+            anchorSize: new naver.maps.Size(10, 1),
             anchorSkew: true,
             anchorColor: "#fff",
             pixelOffset: new naver.maps.Point(10, -10)
