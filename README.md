@@ -34,6 +34,11 @@
 로그인을 하면 내가 쓴 글만 볼 수 있는 기능이 추가된다.
 
 
+<img src="https://user-images.githubusercontent.com/48724199/178937411-ce5d2092-9b8f-453c-aeb8-247882fe1d8e.gif">
+
+포스팅 및 수정
+
+
 ---------------
 <!-- Stack -->
 
