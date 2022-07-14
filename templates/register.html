@@ -16,6 +16,7 @@
         function register() {
             let user_id = $('#userid').val();
             let user_pw = $('#userpw').val();
+            let user_pw_check = $('#userpwcheck').val();
             let user_nick = $('#usernick').val();
             // [안웅기] 빈칸 예외처리
             if(user_id == ''){
@@ -23,8 +24,12 @@
                 return;
             }
 
-            if(user_pw == ''){
+            if(user_pw == '' || user_pw_check == ''){
                 alert('패스워드를 입력하세요.');
+                return
+            }
+            if(user_pw != user_pw_check){
+                alert('패스워드가 서로 다릅니다.');
                 return
             }
             if(user_nick == ''){
@@ -100,6 +105,10 @@
                 <div class="input-group mb-3">
                     <span class="input-group-text">비밀번호</span>
                     <input id="userpw" type="password" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">비밀번호 확인</span>
+                    <input id="userpwcheck" type="password" class="form-control">
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">닉네임</span>
