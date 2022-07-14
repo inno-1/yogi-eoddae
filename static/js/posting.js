@@ -112,6 +112,7 @@ $(document).ready(function () {
     $('#file').on('change', function (e) {
         if(this.files[0]) {
             $('#file-text').val(this.files[0].name);
+            // 사진 미리보기
             const preview = document.querySelector('#preview');
             preview.src = URL.createObjectURL(this.files[0])
         } else {
@@ -124,6 +125,7 @@ $(document).ready(function () {
         $('#file').val("");
         $('#file_tmp').val("")
         $('#file-text').val("");
+        // 미리보기 기본 이미지로 셋팅
         const preview = document.querySelector('#preview');
         preview.src = "https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/No_Image.jpg"
     })
