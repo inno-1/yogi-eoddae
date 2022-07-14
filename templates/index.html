@@ -40,19 +40,22 @@
             <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
                 <div class="d-flex flex-wrap align-items-center">
                     <div class="btn-group me-2">
+
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                            {% if result.order == 'new' %}
+                            {% if result.order == 'date' %}
                                 최신순
                             {% elif result.order == 'recommend' %}
                                 추천순
                             {% elif result.order == 'view' %}
                                 조회순
+                            {% else %}
+                                정렬
                             {% endif %}
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="?order_by=new" class="dropdown-item">최신순</a>
+                                <a href="?order_by=date" class="dropdown-item">최신순</a>
                             </li>
                             <li>
                                 <a href="?order_by=recommend" class="dropdown-item">추천순</a>
