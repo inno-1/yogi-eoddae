@@ -40,7 +40,7 @@
 
         .form-group.file input {
             flex: initial;
-            width: calc(100% - 275px);
+            width: calc(98% - 275px);
         }
 
         .form-group input[type=file] {
@@ -78,15 +78,24 @@
                 <label class="form-label" for="location">주소</label>
                 <input type="text" class="form-control" id="location" value="{% if mode == 'edit' %}{{result.post.location}}{% endif %}" placeholder="주소 입력">
             </div>
-            <div class="form-group file mb-3">
+            <div class="form-group file mb-3" style="display: flex">
                 <span class="form-label">이미지</span>
                 <input type="text" class="custom-file-input" id="file-text" value="{% if mode == 'edit' %}{{result.post.origin_file_name}}{% endif %}" placeholder="이미지 등록" readonly>
                 <input type="file" id="file" accept="image/*">
-                <label class="btn btn-point me-1" for="file" style="margin-left: 10px">파일 첨부</label>
-                <a href="javascript:void(0)" id="file_delete_btn" class="btn btn-point">파일 삭제</a>
-                {% if mode == 'edit' %}
-                    <input type="hidden" id="file_tmp" value="{{result.post.file}}"/>
-                {% endif %}
+                <div style="width: 110px; margin-left: 10px">
+                    <div>
+                        <label id="file" class="btn btn-point me-1" for="file" style="margin: 3px">파일 첨부</label>
+                        <a href="javascript:void(0)" id="file_delete_btn" class="btn btn-point" style="margin: 3px">파일
+                            삭제</a>
+                        {% if mode == 'edit' %}
+                            <input type="hidden" id="file_tmp" value="{{ result.post.file }}"/>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <img src="{% if mode == 'edit' %}{% if result.post.file == '' %}{https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/No_Image.jpg}{% else %}{{result.post.file}}{% endif %}{% else %}https://yogi-eoddae-bucket.s3.ap-northeast-2.amazonaws.com/No_Image.jpg{% endif %}" id="preview"
+                         alt="thumbnail" width="120">
+                </div>
             </div>
 
             <div class="form-group mb-5">
