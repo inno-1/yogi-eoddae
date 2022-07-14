@@ -60,7 +60,7 @@ def home():
 
     if order == None:
         order = 'new'
-    if mypost == None:
+    if mypost == None or cur_status != 1:
         mypost = '0'
     print(mypost)
     post_list = load_posts(order, mypost, cur_id)
@@ -293,7 +293,7 @@ def review_edit():
 def load_posts(type='new', mypost=0, user_id=''):
     if mypost == '0':
         if type == 'new':
-            return list(db.posts.find({}))  # 정렬 없음
+            return list(db.posts.find({}).sort('date', pymongo.DESCENDING))  # 정렬 없음
         else:
             return list(db.posts.find({}).sort(type, pymongo.DESCENDING))  # 최신순
     else:
@@ -500,4 +500,4 @@ def post_edit():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5001, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
