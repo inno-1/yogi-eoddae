@@ -29,7 +29,7 @@
 
 포스팅은 최신순, 조회순, 추천순으로 정렬이 가능하다.
 
-<img src="https://user-images.githubusercontent.com/48724199/178921041-dd1bb30c-14a7-4e93-9a55-5e7e9e1f3484.gif">
+<img src="https://user-images.githubusercontent.com/48724199/178932045-8f0ee607-86c4-4030-af75-6c69d58ef3b4.gif">
 
 로그인을 하면 내가 쓴 글만 볼 수 있는 기능이 추가된다.
 
