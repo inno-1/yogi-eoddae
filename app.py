@@ -108,7 +108,7 @@ def detail(post_id):
     result = {'status': cur_status, 'user_id': cur_user_id, 'recommend_status' : recommend_status}
     review_list = list(db.reviews.find({'post_id': ObjectId(post_id)}))
     for review in review_list:
-        review['date'] = review['date'].strftime("%Y-%m-%d %H:%M")
+        review['date'] = review['date'].strftime("%Y-%m-%d %H:%M") # 밀리초 제거
         review['_id'] = str(review['_id'])
 
     return render_template('detail.html', reviews=review_list, result=result, post=post)
@@ -309,6 +309,7 @@ def my_listing(type, user_id):
     else:
         post = list(db.posts.find({'user_id': user_id}))  # 정렬 없음
     return post
+
 # 타입을 파라미터로 받음 -> date, view, recommend
 @app.route('/post/<type>', methods=['GET'])
 def all_listing(type):
@@ -338,9 +339,10 @@ def s3_connection():
 s3 = s3_connection()
 
 
-# 포스팅
+# [노정민] 게시글 작성
 @app.route('/api/post', methods=['POST'])
 def save_posting():
+    # posting.html에서 데이터를 받아 db에 저장
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     location_receive = request.form['location_give']
@@ -412,17 +414,19 @@ def save_posting():
         db.posts.insert_one(doc)
         return jsonify({'result': 'success','msg': '저장 완료!'})
 
-
+# [노정민] 포스팅 삭제
 @app.route('/api/post', methods=['DELETE'])
 def post_delete():
     id_receive = request.form['id_give']
     post = list(db.posts.find_one({'_id': ObjectId(id_receive)}))
+    # 로그인된 user_id와 posts에 저장된 user_id 비교
     if post:
         db.posts.delete_one({'_id': ObjectId(id_receive)})
         return jsonify({'result': 'success'})
     else:
         return jsonify({'result': 'fail', 'msg': '삭제에 실패하였습니다.'})
 
+# [양명규] 게시글 수정
 @app.route('/api/post', methods=['PUT'])
 def post_edit():
     id_receive = request.form['id_give']
