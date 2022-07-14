@@ -3,7 +3,7 @@
 
 <img src="/yogi-eoddae-thumbnail.png" width="560px" height="320px" alt="Yogi-Eoddae"></img><br/>
 
-
+### [Link](http://nunggi.shop/)
 ---
 
 ### 사이트 소개
