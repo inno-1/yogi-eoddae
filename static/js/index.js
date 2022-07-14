@@ -28,7 +28,11 @@ function mypost(){
             urlParams.append('mypost', '0');
         }
     }
-    window.location.href = '/?' + urlParams.toString();
+
+    // [양명규] - 내가 쓴 글 스위치의 css transition-duration : 0.15s 후에 자연스럽게 주소 이동
+    setTimeout(function () {
+        window.location.href = '/?' + urlParams.toString();
+    }, 150);
 }
 
 function post_sort(order){
