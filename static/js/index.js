@@ -4,6 +4,7 @@ function post_detail(id){
 }
 
 $(document).ready(function () {
+    // [양명규] 메인페이지 등장모션 효과
     $('.intro_wrap').addClass('show');
 
     setTimeout(function () {

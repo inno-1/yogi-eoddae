@@ -45,6 +45,7 @@
     }
 </style>
 
+<!--네이버 지도 API 관련 js-->
 <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId={{ result.MAP_CLIENT_ID }}"></script>
 
@@ -59,6 +60,7 @@
         const y_cen = 37.496962;
         const x_cen = 126.947005;
 
+        // 1. 지도 삽입
         map = new naver.maps.Map('map', {
             center: new naver.maps.LatLng(y_cen, x_cen),
             zoom: 13,
@@ -69,6 +71,7 @@
             }
         });
 
+        // 2. 동작구 경계선 추가
        let polyline = new naver.maps.Polyline({
             map: map,
             path: [
@@ -106,7 +109,10 @@
 
         for(let i = 0; i < posts.length; i++) {
             if(posts[i]['point']) {
+                // 3. 마커 추가
                 let marker = make_marker(posts[i]['point']);
+
+                // 4. 마커의 정보창 추가
                 add_info(marker, posts[i]);
             }
 
@@ -154,5 +160,5 @@
     }
 </script>
 
-
+<!--지도 html-->
 <div id="map"></div>

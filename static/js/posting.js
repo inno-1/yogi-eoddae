@@ -1,3 +1,4 @@
+// [양명규] 게시글 작성 시 필수 값 체크
 function valid_check(title, location, content) {
 
     if(title === '') {
@@ -57,6 +58,7 @@ function posting() {
     })
 }
 
+// [양명규] 게시글 수정하기
 function post_edit(id){
     let title = $('#title').val();
     let content = $('#content').val();
@@ -71,10 +73,11 @@ function post_edit(id){
         form_data.append("file_give", file);
     } else {
         if($('#file_tmp').val() === "") {
+            // 첨부파일 삭제 시
             form_data.append("file_give", "");
             form_data.append("file_name_give", "");
-        }
-        else {
+        } else {
+            // 첨부파일 변경 시
             form_data.append("file_give", $('#file_tmp').val());
             form_data.append("file_name_give", $('#file-text').val());
         }
@@ -104,6 +107,8 @@ function post_edit(id){
 }
 
 $(document).ready(function () {
+
+    // [양명규] 파일첨부 시 파일명 input에 표시
     $('#file').on('change', function (e) {
         if(this.files[0]) {
             $('#file-text').val(this.files[0].name);
@@ -114,6 +119,7 @@ $(document).ready(function () {
         }
     })
 
+    // [양명규] 파일삭제 시 파일 초기화
     $('#file_delete_btn').on('click', function () {
         $('#file').val("");
         $('#file_tmp').val("")
