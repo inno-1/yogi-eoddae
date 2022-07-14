@@ -42,17 +42,23 @@
                     <div class="btn-group me-2">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                            최신순
+                            {% if result.order == 'new' %}
+                                최신순
+                            {% elif result.order == 'recommend' %}
+                                추천순
+                            {% elif result.order == 'view' %}
+                                조회순
+                            {% endif %}
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#" class="dropdown-item">최신순</a>
+                                <a href="?order_by=new" class="dropdown-item">최신순</a>
                             </li>
                             <li>
-                                <a href="#" class="dropdown-item">추천순</a>
+                                <a href="?order_by=recommend" class="dropdown-item">추천순</a>
                             </li>
                             <li>
-                                <a href="#" class="dropdown-item">조회순</a>
+                                <a href="?order_by=view" class="dropdown-item">조회순</a>
                             </li>
                         </ul>
                     </div>

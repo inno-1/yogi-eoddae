@@ -54,16 +54,20 @@ def token_request():
 @app.route('/')
 def home():
     cur_status, cur_id = token_request()
-
+    order = request.args.get('order_by')
     result = {'status': cur_status}
-    post_list = list(db.posts.find({}))
+    print(order)
+    if order == None:
+        order = 'new'
 
+    post_list = load_posts(order)
+    #post_list = list(db.posts.find({}))
     if len(post_list) > 0:
         for post in post_list:
             post['_id'] = str(post['_id'])
 
         result['posts'] = post_list
-
+    result['order'] = order
     result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
 
     return render_template('index.html', result=result)
@@ -283,11 +287,11 @@ def review_edit():
         return jsonify({'result': 'fail', 'msg': '실패쓰'})
 
 
-def load_posts(type='all'):
-    if type == 'all':
-        return list(db.posts.find({}, {'_id': False}))  # 정렬 없음
+def load_posts(type='new'):
+    if type == 'new':
+        return list(db.posts.find({}))  # 정렬 없음
     else:
-        return list(db.posts.find({}, {'_id': False}).sort(type, pymongo.DESCENDING))  # 최신순
+        return list(db.posts.find({}).sort(type, pymongo.DESCENDING))  # 최신순
 
 
 # 타입을 파라미터로 받음 -> date, view, recommend
@@ -492,4 +496,4 @@ def post_edit():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5001, debug=True)
