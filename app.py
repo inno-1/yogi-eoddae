@@ -54,20 +54,23 @@ def token_request():
 @app.route('/')
 def home():
     cur_status, cur_id = token_request()
-    order = request.args.get('order_by')
+    order = request.args.get('orderby')
+    mypost = request.args.get('mypost')
     result = {'status': cur_status}
 
     if order == None:
         order = 'new'
-
-    post_list = load_posts(order)
+    if mypost == None:
+        mypost = '0'
+    print(mypost)
+    post_list = load_posts(order, mypost, cur_id)
     #post_list = list(db.posts.find({}))
     if len(post_list) > 0:
         for post in post_list:
             post['_id'] = str(post['_id'])
-
-        result['posts'] = post_list
+    result['posts'] = post_list
     result['order'] = order
+    result['mypost'] = mypost
     result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
 
     return render_template('index.html', result=result)
@@ -287,13 +290,25 @@ def review_edit():
         return jsonify({'result': 'fail', 'msg': '실패쓰'})
 
 
-def load_posts(type='new'):
-    if type == 'new':
-        return list(db.posts.find({}))  # 정렬 없음
+def load_posts(type='new', mypost=0, user_id=''):
+    if mypost == '0':
+        if type == 'new':
+            return list(db.posts.find({}))  # 정렬 없음
+        else:
+            return list(db.posts.find({}).sort(type, pymongo.DESCENDING))  # 최신순
     else:
-        return list(db.posts.find({}).sort(type, pymongo.DESCENDING))  # 최신순
+        return my_listing(type, user_id)
 
-
+def my_listing(type, user_id):
+    if type == 'new':
+        post = list(db.posts.find({'user_id': user_id}).sort('date', pymongo.DESCENDING))  # 최신순
+    elif type == 'view':
+        post = list(db.posts.find({'user_id': user_id}).sort('view', pymongo.DESCENDING))  # 조회수 순
+    elif type == 'recommend':
+        post = list(db.posts.find({'user_id': user_id}).sort('recommend', pymongo.DESCENDING))  # 추천수 순
+    else:
+        post = list(db.posts.find({'user_id': user_id}))  # 정렬 없음
+    return post
 # 타입을 파라미터로 받음 -> date, view, recommend
 @app.route('/post/<type>', methods=['GET'])
 def all_listing(type):
@@ -305,18 +320,7 @@ def all_listing(type):
     return jsonify({'all_posts': posts})
 
 
-# 로그인 된 유저 id를 받음
-@app.route('/post/<type>/<int:user_id>', methods=['GET'])
-def my_listing(type, user_id):
-    if type == 'date':
-        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('date', pymongo.DESCENDING))  # 최신순
-    elif type == 'view':
-        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('view', pymongo.DESCENDING))  # 조회수 순
-    elif type == 'recommend':
-        post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('recommend', pymongo.DESCENDING))  # 추천수 순
-    else:
-        post = list(db.posts.find({'user_id': user_id}, {'_id': False}))  # 정렬 없음
-    return jsonify({'all_posts': post})
+
 
 
 ACCESS_KEY_ID = 'AKIAXX6AEBP75R7DMAON'  # 액세스 키 (효원 문의)
@@ -496,4 +500,4 @@ def post_edit():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5001, debug=True)

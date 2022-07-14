@@ -52,20 +52,26 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="?order_by=new" class="dropdown-item">최신순</a>
+                                <a href="#" class="dropdown-item" onclick="post_sort('new')">최신순</a>
                             </li>
                             <li>
-                                <a href="?order_by=recommend" class="dropdown-item">추천순</a>
+                                <a href="#" class="dropdown-item" onclick="post_sort('recommend')">추천순</a>
                             </li>
                             <li>
-                                <a href="?order_by=view" class="dropdown-item">조회순</a>
+                                <a href="#" class="dropdown-item" onclick="post_sort('view')">조회순</a>
                             </li>
                         </ul>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="viewOnlyMyPost">
-                        <label class="form-check-label" for="viewOnlyMyPost">내가 쓴 글 보기</label>
+                        {% if result.status == 1 %}
+                            {% if result.mypost == '1' %}
+                                <input class="form-check-input" type="checkbox" role="switch" id="viewOnlyMyPost" onclick="mypost()" checked>
+                            {% else %}
+                                <input class="form-check-input" type="checkbox" role="switch" id="viewOnlyMyPost" onclick="mypost()">
+                            {% endif %}
+                            <label class="form-check-label" for="viewOnlyMyPost">내가 쓴 글 보기</label>
+                        {% endif %}
                     </div>
                 </div>
 
