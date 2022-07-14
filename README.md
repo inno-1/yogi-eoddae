@@ -1,7 +1,7 @@
 # 요기어때
 > 동작구 맛집 또는 핫 플레이스를 공유하는 웹 어플리케이션, **요기어때** 입니다.
 
-<img src="/yogi-eoddae.png" width="300px" height="300px" alt="Yogi-Eoddae"></img><br/>
+<img src="/yogi-eoddae-thumbnail.png" width="300px" height="300px" alt="Yogi-Eoddae"></img><br/>
 
 <p align="cencter">
 <img src="https://user-images.githubusercontent.com/48724199/178913025-3be998ac-2020-4e5c-a992-1e3136e783fe.gif">
