@@ -148,10 +148,13 @@ def api_valid():
 @app.route('/')
 def home():
     cur_status, cur_id = token_request()
-    order = request.args.get('orderby')
-    mypost = request.args.get('mypost')
     result = {'status': cur_status}
 
+    # [안웅기] 정렬 방식을 위한 query string
+    order = request.args.get('orderby')
+    mypost = request.args.get('mypost')
+
+    # 예외처리
     if order == None:
         order = 'new'
     if mypost == None or cur_status != 1:
@@ -172,6 +175,8 @@ def home():
 
 # ================= 게시글 관련 API =================
 
+# [신효원]
+# 수정 - [안웅기] 내가 쓴 글 정렬을 위한 파라미터 추가
 def load_posts(type='new', mypost=0, user_id=''):
     if mypost == '0':
         if type == 'new':
@@ -181,6 +186,9 @@ def load_posts(type='new', mypost=0, user_id=''):
     else:
         return my_listing(type, user_id)
 
+
+# [신효원]
+# 수정 - [안웅기] 내가 쓴 글 정렬을 위한 파라미터 추가
 def my_listing(type, user_id):
     if type == 'new':
         post = list(db.posts.find({'user_id': user_id}).sort('date', pymongo.DESCENDING))  # 최신순
@@ -209,11 +217,13 @@ def posting():
     result = {'status': cur_status}
     return render_template('posting.html', result=result)
 
-
+# [안웅기] 상세페이지 렌더링
+# 포스트 아이디를 받아와 상세페이지 서버사이드 렌더링
 @app.route('/detail/<post_id>')
 def detail(post_id):
     token_receive = request.cookies.get('mytoken')
     cur_status, cur_user_id = token_request()
+
     recommend_status = True
     post = db.posts.find_one({'_id': ObjectId(post_id)})
     post['recommend_count'] = len(post['recommend'])
@@ -415,11 +425,12 @@ def post_recommend():
     cur_status, cur_user_id = token_request()
     id_receive = request.form['id_give']
     result = db.posts.find_one({'_id': ObjectId(id_receive)})
-
+    #[안웅기] 현재 포스트에 유저가 이미 추천했는지 확인
     if cur_status == 1:
         if cur_user_id in result['recommend']:
             return jsonify({'result': 'fail', 'msg': '이미 추천하셨습니다.'})
         else:
+            # db에 유저 아이디값 푸시
             db.posts.update_one({'_id': ObjectId(id_receive)}, {'$push': {'recommend': cur_user_id}})
             return jsonify({'result': 'success'})
     elif cur_status == 2:
@@ -462,9 +473,8 @@ def post_view():
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
 # [안웅기] 리뷰 API
-# 목록 조회는 페이지 오픈 시에! -> jinja2로
 
-# 리뷰 작성
+# [안웅기] 리뷰 작성
 @app.route('/api/review', methods=['POST'])
 def review_post():
     cur_status, cur_user_id = token_request()
@@ -484,7 +494,7 @@ def review_post():
     else:
         return jsonify({'result': 'fail', 'msg': '로그인 하세요.'})
 
-
+# [안웅기] 리뷰 삭
 @app.route('/api/review', methods=['DELETE'])
 def review_delete():
     id_receive = request.form['id_give']
@@ -496,7 +506,7 @@ def review_delete():
         return jsonify({'result': 'fail', 'msg': '실패쓰'})
 
 
-# 댓글 수정
+# [안웅기] 리뷰 수정
 @app.route('/api/review', methods=['PUT'])
 def review_edit():
     id_receive = request.form['id_give']

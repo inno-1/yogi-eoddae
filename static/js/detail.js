@@ -71,6 +71,8 @@ function review_delete(id){
         }
     })
 }
+
+// 리뷰 수정 모드 시 수정 삭제 버튼 숨김처
 function review_edit_button(id){
     let review_id = '#review-' + id;
     let review_edit_id = '#review-edit-' + id;
@@ -87,7 +89,7 @@ function review_edit_button(id){
     $(review_edit_cancel_button).show();
 
 }
-
+// 리뷰 수정 완료 시 수정 삭제 버튼 활성화
 function review_edit_cancel(id){
     let review_id = '#review-' + id;
     let review_edit_id = '#review-edit-' + id;

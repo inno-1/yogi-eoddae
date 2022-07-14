@@ -13,6 +13,7 @@ $(document).ready(function () {
 })
 
 function mypost(){
+    // [안웅기] query string으로 게시물 정렬을 위한 query string 작업
     let cur_href = document.location.search;
     const urlParams = new URLSearchParams(cur_href);
     let check = $('#viewOnlyMyPost').is(":checked");
@@ -37,6 +38,7 @@ function mypost(){
 }
 
 function post_sort(order){
+    // [안웅기] query string으로 게시물 정렬을 위한 query string 작업
     let cur_href = document.location.search;
     const urlParams = new URLSearchParams(cur_href);
     if(urlParams.has('orderby')){
