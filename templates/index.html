@@ -28,24 +28,24 @@
                 <div class="d-flex flex-wrap align-items-center">
                     <div class="btn-group me-2">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                            최신순
+                                aria-expanded="false" value="date" id="selected">
+                            <span class="selected">최신순</span>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#" class="dropdown-item">최신순</a>
+                                <a href="#" id="opt1" class="dropdown-item" value="date" onclick="select_type(this)">최신순</a>
                             </li>
                             <li>
-                                <a href="#" class="dropdown-item">추천순</a>
+                                <a href="#" id="opt2" class="dropdown-item" value="recommend" onclick="select_type(this)">추천순</a>
                             </li>
                             <li>
-                                <a href="#" class="dropdown-item">조회순</a>
+                                <a href="#" id="opt3" class="dropdown-item" value="view" onclick="select_type(this)">조회순</a>
                             </li>
                         </ul>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="viewOnlyMyPost">
+                        <input class="form-check-input" type="checkbox" role="switch" id="viewOnlyMyPost" onclick="check_login_switch()">
                         <label class="form-check-label" for="viewOnlyMyPost">내가 쓴 글 보기</label>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                 <a href="#" class="btn btn-point btn-sm" onclick="check_login()">글쓰기</a>
             </div>
 
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="posts">
                 {% for post in result.posts %}
                 <div class="col">
                     <div class="card shadow-sm" onclick="post_detail('{{ post['_id'] | string}}')">

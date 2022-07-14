@@ -25,5 +25,21 @@ function check_login(){
             }
         }
     })
+}
 
+function check_login_switch(){
+    $.ajax({
+        type: "GET",
+        url: "/api/check",
+        data: {},
+        success: function (response) {
+            if (response['result'] == 'success') {
+
+            } else {
+                // 로그인이 안되면 에러메시지를 띄웁니다.
+                document.querySelector('#viewOnlyMyPost').checked = false
+                alert(response['msg'])
+            }
+        }
+    })
 }

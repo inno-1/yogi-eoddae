@@ -51,12 +51,26 @@ def token_request():
 
 
 # [안웅기] HTML 페이지 렌더링
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
     cur_status, cur_id = token_request()
 
     result = {'status': cur_status}
-    post_list = list(db.posts.find({}))
+
+    post_list = list(db.posts.find({}).sort('date', pymongo.DESCENDING))
+
+    if request.method == 'POST':
+        type_receive = request.form['type_give']
+        check_receive = request.form['check_give']
+
+        if check_receive == 'true':
+            token_receive = request.cookies.get('mytoken')
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+            post_list = my_list(type_receive, payload['id'])
+
+        elif check_receive == 'false':
+            post_list = all_list(type_receive)
 
     if len(post_list) > 0:
         for post in post_list:
@@ -67,6 +81,18 @@ def home():
     result['MAP_CLIENT_ID'] = MAP_CLIENT_ID
 
     return render_template('index.html', result=result)
+
+def my_list(type, id):
+    if type in SORT_TYPE:
+        return list(db.posts.find({'user_id': id}).sort(type, pymongo.DESCENDING))
+    else:
+        return list(db.posts.find({})) # 없으면 그냥 출력
+
+def all_list(type):
+    if type in SORT_TYPE:
+        return list(db.posts.find({}).sort(type, pymongo.DESCENDING))
+    else:
+        return list(db.posts.find({})) # 없으면 그냥 출력
 
 
 @app.route('/login')
@@ -265,7 +291,7 @@ def all_listing(type):
 
 
 # 로그인 된 유저 id를 받음
-@app.route('/post/<type>/<int:user_id>', methods=['GET'])
+@app.route('/post/<type>/<user_id>', methods=['GET'])
 def my_listing(type, user_id):
     if type == 'date':
         post = list(db.posts.find({'user_id': user_id}, {'_id': False}).sort('date', pymongo.DESCENDING))  # 최신순
