@@ -3,6 +3,10 @@
 
 <img src="/yogi-eoddae.png" width="300px" height="300px" alt="Yogi-Eoddae"></img><br/>
 
+<p align="cencter">
+<img src="https://user-images.githubusercontent.com/48724199/178913025-3be998ac-2020-4e5c-a992-1e3136e783fe.gif">
+</p>
+
 
 ---------------
 <!-- Stack -->
