@@ -3,9 +3,35 @@
 
 <img src="/yogi-eoddae-thumbnail.png" width="560px" height="320px" alt="Yogi-Eoddae"></img><br/>
 
+
+---
+
+### 사이트 소개
+
 <p align="cencter">
 <img src="https://user-images.githubusercontent.com/48724199/178913025-3be998ac-2020-4e5c-a992-1e3136e783fe.gif">
 </p>
+
+<img src="https://user-images.githubusercontent.com/48724199/178924383-84775d7a-8f36-4944-a5a2-eed623d05215.gif">
+
+접속하면 볼 수 있는 메인 페이지이다.
+
+포스팅을 클릭하거나 지도를 통해 포스팅 내용을 볼 수 있다.
+
+왼쪽 상단의 로고를 통해 홈으로 이동할 수 있다.
+
+<img src="https://user-images.githubusercontent.com/48724199/178917997-6553401b-1fc4-49df-9fe8-21087dfed699.png">
+<img src="https://user-images.githubusercontent.com/48724199/178917295-eff4ed58-6b38-4b8a-b763-d224d2789263.png">
+
+글쓰기는 로그인을 해야한다.
+
+<img src="https://user-images.githubusercontent.com/48724199/178917473-337eb2bb-867e-4501-bee7-8fa6ad30284d.png">
+
+포스팅은 최신순, 조회순, 추천순으로 정렬이 가능하다.
+
+<img src="https://user-images.githubusercontent.com/48724199/178921041-dd1bb30c-14a7-4e93-9a55-5e7e9e1f3484.gif">
+
+로그인을 하면 내가 쓴 글만 볼 수 있는 기능이 추가된다.
 
 
 ---------------
