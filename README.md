@@ -34,9 +34,13 @@
 로그인을 하면 내가 쓴 글만 볼 수 있는 기능이 추가된다.
 
 
-<img src="https://user-images.githubusercontent.com/48724199/178937411-ce5d2092-9b8f-453c-aeb8-247882fe1d8e.gif">
+<img src="https://user-images.githubusercontent.com/48724199/178938224-fcd27701-8056-49df-9a5f-09c138dd52d2.gif">
 
 포스팅 및 수정
+
+<img src="https://user-images.githubusercontent.com/48724199/178939484-aaaeddcb-63a9-45c1-b71e-6ef228269daa.gif">
+
+추천과 댓글 기능
 
 
 ---------------
@@ -50,6 +54,7 @@
 ![Jinja2](https://img.shields.io/badge/-Jinja2-F05032?style=for-the-badge&logo=Jinja&logoColor=ffffff)
 ![MongoDB](https://img.shields.io/badge/-MongoDB-43853d?style=for-the-badge&logo=MongoDB&logoColor=white)
 ![Amazon](https://img.shields.io/badge/-AWS_EC2-232F3E?style=for-the-badge&logo=Amazon-aws&logoColor=white)
+![Amazon](https://img.shields.io/badge/-AWS_S3-232F3E?style=for-the-badge&logo=Amazon-aws&logoColor=white)
 
 ---
 
