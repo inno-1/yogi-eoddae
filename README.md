@@ -41,9 +41,10 @@
 
 <img src="https://user-images.githubusercontent.com/48724199/178938224-fcd27701-8056-49df-9a5f-09c138dd52d2.gif">
 
->  글쓰기 및 수정이 가능하다.  
+> 글쓰기 및 수정이 가능하다.  
+> 입력한 주소를 네이버 지도에서 찾아 메인 페이지에 표시한다.  
 > 사진을 등록하지 않으면 기본 이미지가 등록되며,  
-> 수정 시에도 사진을 삭제하면 기본 이미지가 등록된다.  
+> 수정 시에 사진을 삭제하면 다시 기본 이미지가 등록된다.  
 <br/>
 
 <img src="https://user-images.githubusercontent.com/48724199/178939484-aaaeddcb-63a9-45c1-b71e-6ef228269daa.gif">
