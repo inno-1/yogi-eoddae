@@ -3,8 +3,18 @@
 
 <img src="/yogi-eoddae-thumbnail.png" width="560px" height="320px" alt="Yogi-Eoddae"></img><br/>
 
-### [Link](http://nunggi.shop/)
+###  [Link](http://nunggi.shop/)
 ---
+
+### 목차
+- [사이트 소개](#사이트-소개)  
+- S.A  
+- Design
+- API
+- Trouble Shooting
+- Develope
+
+----
 
 ### 사이트 소개
 
@@ -14,34 +24,33 @@
 
 <img src="https://user-images.githubusercontent.com/48724199/178924383-84775d7a-8f36-4944-a5a2-eed623d05215.gif">
 
-접속하면 볼 수 있는 메인 페이지이다.
-
-포스팅을 클릭하거나 지도를 통해 포스팅 내용을 볼 수 있다.
-
-왼쪽 상단의 로고를 통해 홈으로 이동할 수 있다.
-
-<img src="https://user-images.githubusercontent.com/48724199/178917997-6553401b-1fc4-49df-9fe8-21087dfed699.png">
-<img src="https://user-images.githubusercontent.com/48724199/178917295-eff4ed58-6b38-4b8a-b763-d224d2789263.png">
-
-글쓰기는 로그인을 해야한다.
+> 접속하면 볼 수 있는 메인 페이지이다.  
+> 포스팅을 클릭하거나 지도를 통해 포스팅 내용을 볼 수 있다.  
+> 왼쪽 상단의 로고를 통해 홈으로 이동할 수 있다.  
+<br/>
 
 <img src="https://user-images.githubusercontent.com/48724199/178917473-337eb2bb-867e-4501-bee7-8fa6ad30284d.png">
 
-포스팅은 최신순, 조회순, 추천순으로 정렬이 가능하다.
+> 포스팅은 최신순, 조회순, 추천순으로 정렬이 가능하다.  
+<br/>
 
 <img src="https://user-images.githubusercontent.com/48724199/178932045-8f0ee607-86c4-4030-af75-6c69d58ef3b4.gif">
 
-로그인을 하면 내가 쓴 글만 볼 수 있는 기능이 추가된다.
-
+> 로그인을 하면 내가 쓴 글만 볼 수 있는 기능이 추가된다.  
+<br/>
 
 <img src="https://user-images.githubusercontent.com/48724199/178938224-fcd27701-8056-49df-9a5f-09c138dd52d2.gif">
 
-포스팅 및 수정
+>  글쓰기 및 수정이 가능하다.  
+> 사진을 등록하지 않으면 기본 이미지가 등록되며,  
+> 수정 시에도 사진을 삭제하면 기본 이미지가 등록된다.  
+<br/>
 
 <img src="https://user-images.githubusercontent.com/48724199/178939484-aaaeddcb-63a9-45c1-b71e-6ef228269daa.gif">
 
-추천과 댓글 기능
-
+> 포스팅을 추천/추천해제 하거나 댓글을 작성할 수 있다.  
+> 댓글도 수정 삭제가 가능하다.  
+<br/>
 
 ---------------
 <!-- Stack -->
